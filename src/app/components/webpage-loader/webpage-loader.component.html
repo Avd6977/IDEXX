@@ -1,0 +1,43 @@
+<div class="webpage-loader-container">
+  <div class="header">
+    <h1>Webpage Loader</h1>
+    <div class="url-input-container">
+      <input 
+        type="url" 
+        [(ngModel)]="urlInput"
+        placeholder="Enter URL (e.g., https://www.example.com)"
+        class="url-input"
+        (keyup.enter)="loadWebpage()"
+      />
+      <button 
+        (click)="loadWebpage()" 
+        [disabled]="isLoading$ | async"
+        class="load-button"
+      >
+        {{ (isLoading$ | async) ? 'Loading...' : 'Load Webpage' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="content-area">
+    <div *ngIf="error$ | async as error" class="error-message">
+      <p>Error: {{ error }}</p>
+    </div>
+
+    <div *ngIf="isLoading$ | async" class="loading-indicator">
+      <p>Loading webpage...</p>
+    </div>
+
+    <div 
+      *ngIf="(currentUrl$ | async) && !(isLoading$ | async) && !(error$ | async)" 
+      class="iframe-container"
+    >
+      <iframe 
+        [src]="currentUrl$ | async"
+        frameborder="0"
+        class="webpage-frame"
+        title="Loaded Webpage"
+      ></iframe>
+    </div>
+  </div>
+</div>
