@@ -12,9 +12,9 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { webpageReducer } from 'src/app/store/webpage.reducer';
 import { WebpageEffects } from 'src/app/store/webpage.effects';
 import { routes } from 'src/app/app.routes';
-import { AuthInterceptor } from 'src/app/core/interceptors/auth.interceptor';
-import { ErrorInterceptor } from 'src/app/core/interceptors/error.interceptor';
-import { LoadingInterceptor } from 'src/app/core/interceptors/loading.interceptor';
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
+import { ErrorInterceptor } from 'src/app/interceptors/error.interceptor';
+import { LoadingInterceptor } from 'src/app/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [

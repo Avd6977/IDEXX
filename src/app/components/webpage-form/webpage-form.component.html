@@ -1,0 +1,87 @@
+<div class="webpage-form-container">
+    <h2>Add New Webpage</h2>
+
+    <form
+        [formGroup]="webpageForm"
+        (ngSubmit)="onSubmit()"
+        class="webpage-form"
+    >
+        <div class="form-group">
+            <label for="url">URL *</label>
+            <input
+                type="url"
+                id="url"
+                formControlName="url"
+                class="form-control"
+                [class.is-invalid]="url?.invalid && url?.touched"
+                placeholder="https://example.com"
+            />
+
+            @if (url?.invalid && url?.touched) {
+                <div class="invalid-feedback">
+                    @if (url?.errors?.['required']) {
+                        <div>URL is required</div>
+                    }
+                    @if (url?.errors?.['pattern']) {
+                        <div>Please enter a valid URL</div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input
+                type="text"
+                id="title"
+                formControlName="title"
+                class="form-control"
+                placeholder="Website title"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                formControlName="description"
+                class="form-control"
+                rows="3"
+                placeholder="Brief description of the website"
+            ></textarea>
+        </div>
+
+        <div class="form-actions">
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="webpageForm.invalid || isLoading"
+            >
+                @if (isLoading) {
+                    <span class="loading-spinner"></span>
+                }
+                {{ isLoading ? 'Saving...' : 'Save Webpage' }}
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="resetForm()"
+            >
+                Reset
+            </button>
+        </div>
+    </form>
+
+    @if (formStatus) {
+        <div class="form-status">
+            <div
+                class="alert"
+                [class.alert-success]="formStatus.type === 'success'"
+                [class.alert-error]="formStatus.type === 'error'"
+            >
+                {{ formStatus.message }}
+            </div>
+        </div>
+    }
+</div>

@@ -23,7 +23,9 @@ export type LoaderColor =
                 [attr.aria-live]="'polite'"
             >
                 <div class="spinner"></div>
-                <div *ngIf="message" class="loader-message">{{ message }}</div>
+                @if (message) {
+                    <div class="loader-message">{{ message }}</div>
+                }
             </div>
         </div>
     `,

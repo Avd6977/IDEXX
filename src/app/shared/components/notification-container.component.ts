@@ -16,41 +16,41 @@ import {
             aria-live="polite"
             aria-label="Notifications"
         >
-            <div
-                *ngFor="let notification of notifications; trackBy: trackById"
-                class="notification"
-                [class]="getNotificationClass(notification)"
-                [attr.role]="notification.type === 'error' ? 'alert' : 'status'"
-            >
-                <div class="notification-icon">
-                    <span [innerHTML]="getIcon(notification.type)"></span>
-                </div>
-
-                <div class="notification-content">
-                    <div class="notification-title">
-                        {{ notification.title }}
-                    </div>
-                    <div
-                        class="notification-message"
-                        *ngIf="notification.message"
-                    >
-                        {{ notification.message }}
-                    </div>
-                    <div class="notification-timestamp">
-                        {{ formatTime(notification.timestamp) }}
-                    </div>
-                </div>
-
-                <button
-                    class="notification-close"
-                    (click)="closeNotification(notification.id)"
-                    [attr.aria-label]="
-                        'Close ' + notification.title + ' notification'
-                    "
+            @for (notification of notifications; track notification.id) {
+                <div
+                    class="notification"
+                    [class]="getNotificationClass(notification)"
+                    [attr.role]="notification.type === 'error' ? 'alert' : 'status'"
                 >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                    <div class="notification-icon">
+                        <span [innerHTML]="getIcon(notification.type)"></span>
+                    </div>
+
+                    <div class="notification-content">
+                        <div class="notification-title">
+                            {{ notification.title }}
+                        </div>
+                        @if (notification.message) {
+                            <div class="notification-message">
+                                {{ notification.message }}
+                            </div>
+                        }
+                        <div class="notification-timestamp">
+                            {{ formatTime(notification.timestamp) }}
+                        </div>
+                    </div>
+
+                    <button
+                        class="notification-close"
+                        (click)="closeNotification(notification.id)"
+                        [attr.aria-label]="
+                            'Close ' + notification.title + ' notification'
+                        "
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
         </div>
     `,
     styles: [

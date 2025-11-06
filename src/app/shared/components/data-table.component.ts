@@ -50,226 +50,236 @@ export interface PaginationEvent {
     template: `
         <div class="data-table-container">
             <!-- Search/Filter -->
-            <div class="table-header" *ngIf="searchable">
-                <div class="search-container">
-                    <input
-                        type="text"
-                        class="search-input"
-                        placeholder="Search..."
-                        [(ngModel)]="searchTerm"
-                        (ngModelChange)="onSearch($event)"
-                        [attr.aria-label]="
-                            'Search through ' + data.length + ' items'
-                        "
-                    />
-                    <span class="search-icon">🔍</span>
+            @if (searchable) {
+                <div class="table-header">
+                    <div class="search-container">
+                        <input
+                            type="text"
+                            class="search-input"
+                            placeholder="Search..."
+                            [(ngModel)]="searchTerm"
+                            (ngModelChange)="onSearch($event)"
+                            [attr.aria-label]="
+                                'Search through ' + data.length + ' items'
+                            "
+                        />
+                        <span class="search-icon">🔍</span>
+                    </div>
                 </div>
-            </div>
+            }
 
             <!-- Loading State -->
-            <app-loader
-                *ngIf="loading"
-                message="Loading data..."
-                [overlay]="true"
-            ></app-loader>
+            @if (loading) {
+                <app-loader
+                    message="Loading data..."
+                    [overlay]="true"
+                ></app-loader>
+            }
 
             <!-- Table -->
             <div class="table-wrapper" [class.loading]="loading">
                 <table class="data-table" role="table">
                     <thead>
                         <tr role="row">
-                            <th
-                                *ngFor="let column of columns"
-                                [style.width]="column.width"
-                                [class.sortable]="column.sortable"
-                                (click)="onSort(column)"
-                                [attr.aria-sort]="getSortAriaLabel(column.key)"
-                                role="columnheader"
-                            >
-                                <div class="header-content">
-                                    <span class="header-label">{{
-                                        column.label
-                                    }}</span>
-                                    <span
-                                        class="sort-indicator"
-                                        *ngIf="column.sortable"
-                                    >
-                                        <span
-                                            [class.active]="
-                                                currentSort.column ===
-                                                    column.key &&
-                                                currentSort.direction === 'asc'
-                                            "
-                                            >↑</span
-                                        >
-                                        <span
-                                            [class.active]="
-                                                currentSort.column ===
-                                                    column.key &&
-                                                currentSort.direction === 'desc'
-                                            "
-                                            >↓</span
-                                        >
-                                    </span>
-                                </div>
-                            </th>
+                            @for (column of columns; track column.key) {
+                                <th
+                                    [style.width]="column.width"
+                                    [class.sortable]="column.sortable"
+                                    (click)="onSort(column)"
+                                    [attr.aria-sort]="getSortAriaLabel(column.key)"
+                                    role="columnheader"
+                                >
+                                    <div class="header-content">
+                                        <span class="header-label">{{
+                                            column.label
+                                        }}</span>
+                                        @if (column.sortable) {
+                                            <span class="sort-indicator">
+                                                <span
+                                                    [class.active]="
+                                                        currentSort.column ===
+                                                            column.key &&
+                                                        currentSort.direction === 'asc'
+                                                    "
+                                                    >↑</span
+                                                >
+                                                <span
+                                                    [class.active]="
+                                                        currentSort.column ===
+                                                            column.key &&
+                                                        currentSort.direction === 'desc'
+                                                    "
+                                                    >↓</span
+                                                >
+                                            </span>
+                                        }
+                                    </div>
+                                </th>
+                            }
                         </tr>
                     </thead>
 
                     <tbody>
-                        <tr
-                            *ngFor="
-                                let item of paginatedData;
-                                trackBy: trackByFn
-                            "
-                            role="row"
-                            class="table-row"
-                            (click)="onRowClick(item)"
-                        >
-                            <td
-                                *ngFor="let column of columns"
-                                role="gridcell"
-                                [attr.data-label]="column.label"
-                            >
-                                <ng-container [ngSwitch]="column.type">
-                                    <!-- URL type -->
-                                    <a
-                                        *ngSwitchCase="'url'"
-                                        [href]="getValue(item, column.key)"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="url-link"
+                        @for (
+                            item of paginatedData;
+                            track item.id || item
+                        ) {
+                            <tr role="row" class="table-row" (click)="onRowClick(item)">
+                                @for (column of columns; track column.key) {
+                                    <td
+                                        role="gridcell"
+                                        [attr.data-label]="column.label"
                                     >
-                                        {{
-                                            getValue(item, column.key)
-                                                | truncate : 40
-                                        }}
-                                    </a>
-
-                                    <!-- Date type -->
-                                    <span *ngSwitchCase="'date'">
-                                        {{
-                                            getValue(item, column.key) | timeAgo
-                                        }}
-                                    </span>
-
-                                    <!-- Number type -->
-                                    <span
-                                        *ngSwitchCase="'number'"
-                                        class="number-cell"
-                                    >
-                                        {{
-                                            getValue(item, column.key) | number
-                                        }}
-                                    </span>
-
-                                    <!-- Default text -->
-                                    <span *ngSwitchDefault>
-                                        {{
-                                            getValue(item, column.key)
-                                                | truncate
-                                                    : (column.key ===
-                                                      'description'
-                                                          ? 80
-                                                          : 50)
-                                        }}
-                                    </span>
-                                </ng-container>
-                            </td>
-                        </tr>
+                                        @switch (column.type) {
+                                            <!-- URL type -->
+                                            @case ('url') {
+                                                <a
+                                                    [href]="getValue(item, column.key)"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="url-link"
+                                                >
+                                                    {{
+                                                        getValue(item, column.key)
+                                                            | truncate : 40
+                                                    }}
+                                                </a>
+                                            }
+                                            <!-- Date type -->
+                                            @case ('date') {
+                                                <span>
+                                                    {{
+                                                        getValue(item, column.key) | timeAgo
+                                                    }}
+                                                </span>
+                                            }
+                                            <!-- Number type -->
+                                            @case ('number') {
+                                                <span
+                                                    class="number-cell"
+                                                >
+                                                    {{
+                                                        getValue(item, column.key) | number
+                                                    }}
+                                                </span>
+                                            }
+                                            <!-- Default text -->
+                                            @default {
+                                                <span>
+                                                    {{
+                                                        getValue(item, column.key)
+                                                            | truncate
+                                                                : (column.key ===
+                                                                  'description'
+                                                                      ? 80
+                                                                      : 50)
+                                                    }}
+                                                </span>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
                     </tbody>
                 </table>
 
                 <!-- Empty State -->
-                <div
-                    class="empty-state"
-                    *ngIf="!loading && paginatedData.length === 0"
-                >
-                    <div class="empty-icon">📭</div>
-                    <h3>No data found</h3>
-                    <p *ngIf="searchTerm">
-                        No results match "{{ searchTerm }}". Try a different
-                        search term.
-                    </p>
-                    <p *ngIf="!searchTerm">There are no items to display.</p>
-                </div>
+                @if (!loading && paginatedData.length === 0) {
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <h3>No data found</h3>
+                        @if (searchTerm) {
+                            <p>
+                                No results match "{{ searchTerm }}". Try a different
+                                search term.
+                            </p>
+                        }
+                        @if (!searchTerm) {
+                            <p>There are no items to display.</p>
+                        }
+                    </div>
+                }
             </div>
 
             <!-- Pagination -->
-            <div class="pagination" *ngIf="!loading && totalPages > 1">
-                <div class="pagination-info">
-                    Showing {{ getStartRecord() }}-{{ getEndRecord() }} of
-                    {{ filteredData.length }} items
-                </div>
+            @if (!loading && totalPages > 1) {
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing {{ getStartRecord() }}-{{ getEndRecord() }} of
+                        {{ filteredData.length }} items
+                    </div>
 
-                <div class="pagination-controls">
-                    <button
-                        class="page-btn"
-                        [disabled]="currentPage === 1"
-                        (click)="goToPage(1)"
-                        aria-label="Go to first page"
-                    >
-                        ⏮️
-                    </button>
-
-                    <button
-                        class="page-btn"
-                        [disabled]="currentPage === 1"
-                        (click)="goToPage(currentPage - 1)"
-                        aria-label="Go to previous page"
-                    >
-                        ◀️
-                    </button>
-
-                    <span class="page-numbers">
+                    <div class="pagination-controls">
                         <button
-                            *ngFor="let page of getVisiblePages()"
                             class="page-btn"
-                            [class.active]="page === currentPage"
-                            (click)="goToPage(page)"
-                            [attr.aria-label]="'Go to page ' + page"
-                            [attr.aria-current]="
-                                page === currentPage ? 'page' : null
-                            "
+                            [disabled]="currentPage === 1"
+                            (click)="goToPage(1)"
+                            aria-label="Go to first page"
                         >
-                            {{ page }}
+                            ⏮️
                         </button>
-                    </span>
 
-                    <button
-                        class="page-btn"
-                        [disabled]="currentPage === totalPages"
-                        (click)="goToPage(currentPage + 1)"
-                        aria-label="Go to next page"
-                    >
-                        ▶️
-                    </button>
+                        <button
+                            class="page-btn"
+                            [disabled]="currentPage === 1"
+                            (click)="goToPage(currentPage - 1)"
+                            aria-label="Go to previous page"
+                        >
+                            ◀️
+                        </button>
 
-                    <button
-                        class="page-btn"
-                        [disabled]="currentPage === totalPages"
+                        <span class="page-numbers">
+                            @for (page of getVisiblePages(); track page) {
+                                <button
+                                    class="page-btn"
+                                    [class.active]="page === currentPage"
+                                    (click)="goToPage(page)"
+                                    [attr.aria-label]="'Go to page ' + page"
+                                    [attr.aria-current]="
+                                        page === currentPage ? 'page' : null
+                                    "
+                                >
+                                    {{ page }}
+                                </button>
+                            }
+                        </span>
+
+                        <button
+                            class="page-btn"
+                            [disabled]="currentPage === totalPages"
+                            (click)="goToPage(currentPage + 1)"
+                            aria-label="Go to next page"
+                        >
+                            ▶️
+                        </button>
+
+                        <button
+                            class="page-btn"
+                            [disabled]="currentPage === totalPages"
                         (click)="goToPage(totalPages)"
-                        aria-label="Go to last page"
-                    >
-                        ⏭️
-                    </button>
-                </div>
+                            aria-label="Go to last page"
+                        >
+                            ⏭️
+                        </button>
+                    </div>
 
-                <div class="page-size-selector">
-                    <label for="pageSize">Show:</label>
-                    <select
-                        id="pageSize"
-                        [(ngModel)]="pageSize"
-                        (ngModelChange)="onPageSizeChange($event)"
-                    >
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>per page</span>
+                    <div class="page-size-selector">
+                        <label for="pageSize">Show:</label>
+                        <select
+                            id="pageSize"
+                            [(ngModel)]="pageSize"
+                            (ngModelChange)="onPageSizeChange($event)"
+                        >
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span>per page</span>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     `,
     styles: [

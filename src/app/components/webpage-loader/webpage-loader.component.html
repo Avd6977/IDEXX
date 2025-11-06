@@ -20,24 +20,27 @@
   </div>
 
   <div class="content-area">
-    <div *ngIf="error$ | async as error" class="error-message">
-      <p>Error: {{ error }}</p>
-    </div>
+    @if (error$ | async) {
+      <div class="error-message">
+        <p>Error: {{ error$ | async }}</p>
+      </div>
+    }
 
-    <div *ngIf="isLoading$ | async" class="loading-indicator">
-      <p>Loading webpage...</p>
-    </div>
+    @if (isLoading$ | async) {
+      <div class="loading-indicator">
+        <p>Loading webpage...</p>
+      </div>
+    }
 
-    <div 
-      *ngIf="(currentUrl$ | async) && !(isLoading$ | async) && !(error$ | async)" 
-      class="iframe-container"
-    >
-      <iframe 
-        [src]="currentUrl$ | async"
-        frameborder="0"
-        class="webpage-frame"
-        title="Loaded Webpage"
-      ></iframe>
-    </div>
+    @if ((currentUrl$ | async) && !(isLoading$ | async) && !(error$ | async)) {
+      <div class="iframe-container">
+        <iframe 
+          [src]="currentUrl$ | async"
+          frameborder="0"
+          class="webpage-frame"
+          title="Loaded Webpage"
+        ></iframe>
+      </div>
+    }
   </div>
 </div>

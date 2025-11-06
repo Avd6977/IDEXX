@@ -4,7 +4,7 @@ import {
     HttpTestingController
 } from '@angular/common/http/testing';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ErrorInterceptor } from 'src/app/core/interceptors/error.interceptor';
+import { ErrorInterceptor } from 'src/app/interceptors/error.interceptor';
 
 describe('ErrorInterceptor', () => {
     let httpMock: HttpTestingController;

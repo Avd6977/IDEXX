@@ -92,15 +92,17 @@ import { TimeAgoPipe } from 'src/app/shared/pipes/time-ago.pipe';
                                 Large Loader
                             </button>
                         </div>
-                        <div class="loader-demo" *ngIf="showLoaderDemo">
-                            <app-loader
-                                [size]="loaderSize"
-                                [color]="'primary'"
-                                [message]="'Demo loader...'"
-                                [overlay]="false"
-                            >
-                            </app-loader>
-                        </div>
+                        @if (showLoaderDemo) {
+                            <div class="loader-demo">
+                                <app-loader
+                                    [size]="loaderSize"
+                                    [color]="'primary'"
+                                    [message]="'Demo loader...'"
+                                    [overlay]="false"
+                                >
+                                </app-loader>
+                            </div>
+                        }
                     </div>
 
                     <div class="demo-card">
@@ -202,23 +204,21 @@ import { TimeAgoPipe } from 'src/app/shared/pipes/time-ago.pipe';
                     </button>
                 </div>
 
-                <div
-                    class="interceptor-logs"
-                    *ngIf="interceptorLogs.length > 0"
-                >
-                    <h4>Interceptor Activity:</h4>
-                    <div class="log-entries">
-                        <div
-                            *ngFor="let log of interceptorLogs"
-                            class="log-entry"
-                        >
-                            <span class="log-time">{{
-                                log.timestamp | timeAgo
-                            }}</span>
-                            <span class="log-message">{{ log.message }}</span>
+                @if (interceptorLogs.length > 0) {
+                    <div class="interceptor-logs">
+                        <h4>Interceptor Activity:</h4>
+                        <div class="log-entries">
+                            @for (log of interceptorLogs; track log.timestamp) {
+                                <div class="log-entry">
+                                    <span class="log-time">{{
+                                        log.timestamp | timeAgo
+                                    }}</span>
+                                    <span class="log-message">{{ log.message }}</span>
+                                </div>
+                            }
                         </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     `,

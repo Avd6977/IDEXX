@@ -4,7 +4,7 @@ import {
     HttpTestingController
 } from '@angular/common/http/testing';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from 'src/app/core/interceptors/auth.interceptor';
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 
 describe('AuthInterceptor', () => {
     let httpMock: HttpTestingController;
