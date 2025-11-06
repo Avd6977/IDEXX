@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { WebpageLoaderComponent } from './components/webpage-loader/webpage-loader.component';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [WebpageLoaderComponent],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })

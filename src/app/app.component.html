@@ -1,3 +1,13 @@
 <div class="app-container">
-  <app-webpage-loader></app-webpage-loader>
+  <header class="app-header">
+    <h1>Angular Webpage Loader</h1>
+    <nav>
+      <a routerLink="/webpage-loader" routerLinkActive="active">Webpage Loader</a>
+      <a routerLink="/webpage-form" routerLinkActive="active">Add Webpage</a>
+    </nav>
+  </header>
+  
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
 </div>
