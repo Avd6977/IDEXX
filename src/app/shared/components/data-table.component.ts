@@ -51,29 +51,26 @@ export interface PaginationEvent {
         <div class="data-table-container">
             <!-- Search/Filter -->
             @if (searchable) {
-                <div class="table-header">
-                    <div class="search-container">
-                        <input
-                            type="text"
-                            class="search-input"
-                            placeholder="Search..."
-                            [(ngModel)]="searchTerm"
-                            (ngModelChange)="onSearch($event)"
-                            [attr.aria-label]="
-                                'Search through ' + data.length + ' items'
-                            "
-                        />
-                        <span class="search-icon">🔍</span>
-                    </div>
+            <div class="table-header">
+                <div class="search-container">
+                    <input
+                        type="text"
+                        class="search-input"
+                        placeholder="Search..."
+                        [(ngModel)]="searchTerm"
+                        (ngModelChange)="onSearch($event)"
+                        [attr.aria-label]="
+                            'Search through ' + data.length + ' items'
+                        "
+                    />
+                    <span class="search-icon">🔍</span>
                 </div>
+            </div>
             }
 
             <!-- Loading State -->
             @if (loading) {
-                <app-loader
-                    message="Loading data..."
-                    [overlay]="true"
-                ></app-loader>
+            <app-loader message="Loading data..." [overlay]="true"></app-loader>
             }
 
             <!-- Table -->
@@ -82,203 +79,195 @@ export interface PaginationEvent {
                     <thead>
                         <tr role="row">
                             @for (column of columns; track column.key) {
-                                <th
-                                    [style.width]="column.width"
-                                    [class.sortable]="column.sortable"
-                                    (click)="onSort(column)"
-                                    [attr.aria-sort]="getSortAriaLabel(column.key)"
-                                    role="columnheader"
-                                >
-                                    <div class="header-content">
-                                        <span class="header-label">{{
-                                            column.label
-                                        }}</span>
-                                        @if (column.sortable) {
-                                            <span class="sort-indicator">
-                                                <span
-                                                    [class.active]="
-                                                        currentSort.column ===
-                                                            column.key &&
-                                                        currentSort.direction === 'asc'
-                                                    "
-                                                    >↑</span
-                                                >
-                                                <span
-                                                    [class.active]="
-                                                        currentSort.column ===
-                                                            column.key &&
-                                                        currentSort.direction === 'desc'
-                                                    "
-                                                    >↓</span
-                                                >
-                                            </span>
-                                        }
-                                    </div>
-                                </th>
+                            <th
+                                [style.width]="column.width"
+                                [class.sortable]="column.sortable"
+                                (click)="onSort(column)"
+                                [attr.aria-sort]="getSortAriaLabel(column.key)"
+                                role="columnheader"
+                            >
+                                <div class="header-content">
+                                    <span class="header-label">{{
+                                        column.label
+                                    }}</span>
+                                    @if (column.sortable) {
+                                    <span class="sort-indicator">
+                                        <span
+                                            [class.active]="
+                                                currentSort.column ===
+                                                    column.key &&
+                                                currentSort.direction === 'asc'
+                                            "
+                                            >↑</span
+                                        >
+                                        <span
+                                            [class.active]="
+                                                currentSort.column ===
+                                                    column.key &&
+                                                currentSort.direction === 'desc'
+                                            "
+                                            >↓</span
+                                        >
+                                    </span>
+                                    }
+                                </div>
+                            </th>
                             }
                         </tr>
                     </thead>
 
                     <tbody>
-                        @for (
-                            item of paginatedData;
-                            track item.id || item
-                        ) {
-                            <tr role="row" class="table-row" (click)="onRowClick(item)">
-                                @for (column of columns; track column.key) {
-                                    <td
-                                        role="gridcell"
-                                        [attr.data-label]="column.label"
-                                    >
-                                        @switch (column.type) {
-                                            <!-- URL type -->
-                                            @case ('url') {
-                                                <a
-                                                    [href]="getValue(item, column.key)"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    class="url-link"
-                                                >
-                                                    {{
-                                                        getValue(item, column.key)
-                                                            | truncate : 40
-                                                    }}
-                                                </a>
-                                            }
-                                            <!-- Date type -->
-                                            @case ('date') {
-                                                <span>
-                                                    {{
-                                                        getValue(item, column.key) | timeAgo
-                                                    }}
-                                                </span>
-                                            }
-                                            <!-- Number type -->
-                                            @case ('number') {
-                                                <span
-                                                    class="number-cell"
-                                                >
-                                                    {{
-                                                        getValue(item, column.key) | number
-                                                    }}
-                                                </span>
-                                            }
-                                            <!-- Default text -->
-                                            @default {
-                                                <span>
-                                                    {{
-                                                        getValue(item, column.key)
-                                                            | truncate
-                                                                : (column.key ===
-                                                                  'description'
-                                                                      ? 80
-                                                                      : 50)
-                                                    }}
-                                                </span>
-                                            }
-                                        }
-                                    </td>
+                        @for ( item of paginatedData; track item.id || item ) {
+                        <tr
+                            role="row"
+                            class="table-row"
+                            (click)="onRowClick(item)"
+                        >
+                            @for (column of columns; track column.key) {
+                            <td
+                                role="gridcell"
+                                [attr.data-label]="column.label"
+                            >
+                                @switch (column.type) {
+                                <!-- URL type -->
+                                @case ('url') {
+                                <a
+                                    [href]="getValue(item, column.key)"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="url-link"
+                                >
+                                    {{
+                                        getValue(item, column.key)
+                                            | truncate : 40
+                                    }}
+                                </a>
                                 }
-                            </tr>
+                                <!-- Date type -->
+                                @case ('date') {
+                                <span>
+                                    {{ getValue(item, column.key) | timeAgo }}
+                                </span>
+                                }
+                                <!-- Number type -->
+                                @case ('number') {
+                                <span class="number-cell">
+                                    {{ getValue(item, column.key) | number }}
+                                </span>
+                                }
+                                <!-- Default text -->
+                                @default {
+                                <span>
+                                    {{
+                                        getValue(item, column.key)
+                                            | truncate
+                                                : (column.key === 'description'
+                                                      ? 80
+                                                      : 50)
+                                    }}
+                                </span>
+                                } }
+                            </td>
+                            }
+                        </tr>
                         }
                     </tbody>
                 </table>
 
                 <!-- Empty State -->
                 @if (!loading && paginatedData.length === 0) {
-                    <div class="empty-state">
-                        <div class="empty-icon">📭</div>
-                        <h3>No data found</h3>
-                        @if (searchTerm) {
-                            <p>
-                                No results match "{{ searchTerm }}". Try a different
-                                search term.
-                            </p>
-                        }
-                        @if (!searchTerm) {
-                            <p>There are no items to display.</p>
-                        }
-                    </div>
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>No data found</h3>
+                    @if (searchTerm) {
+                    <p>
+                        No results match "{{ searchTerm }}". Try a different
+                        search term.
+                    </p>
+                    } @if (!searchTerm) {
+                    <p>There are no items to display.</p>
+                    }
+                </div>
                 }
             </div>
 
             <!-- Pagination -->
             @if (!loading && totalPages > 1) {
-                <div class="pagination">
-                    <div class="pagination-info">
-                        Showing {{ getStartRecord() }}-{{ getEndRecord() }} of
-                        {{ filteredData.length }} items
-                    </div>
-
-                    <div class="pagination-controls">
-                        <button
-                            class="page-btn"
-                            [disabled]="currentPage === 1"
-                            (click)="goToPage(1)"
-                            aria-label="Go to first page"
-                        >
-                            ⏮️
-                        </button>
-
-                        <button
-                            class="page-btn"
-                            [disabled]="currentPage === 1"
-                            (click)="goToPage(currentPage - 1)"
-                            aria-label="Go to previous page"
-                        >
-                            ◀️
-                        </button>
-
-                        <span class="page-numbers">
-                            @for (page of getVisiblePages(); track page) {
-                                <button
-                                    class="page-btn"
-                                    [class.active]="page === currentPage"
-                                    (click)="goToPage(page)"
-                                    [attr.aria-label]="'Go to page ' + page"
-                                    [attr.aria-current]="
-                                        page === currentPage ? 'page' : null
-                                    "
-                                >
-                                    {{ page }}
-                                </button>
-                            }
-                        </span>
-
-                        <button
-                            class="page-btn"
-                            [disabled]="currentPage === totalPages"
-                            (click)="goToPage(currentPage + 1)"
-                            aria-label="Go to next page"
-                        >
-                            ▶️
-                        </button>
-
-                        <button
-                            class="page-btn"
-                            [disabled]="currentPage === totalPages"
-                        (click)="goToPage(totalPages)"
-                            aria-label="Go to last page"
-                        >
-                            ⏭️
-                        </button>
-                    </div>
-
-                    <div class="page-size-selector">
-                        <label for="pageSize">Show:</label>
-                        <select
-                            id="pageSize"
-                            [(ngModel)]="pageSize"
-                            (ngModelChange)="onPageSizeChange($event)"
-                        >
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span>per page</span>
-                    </div>
+            <div class="pagination">
+                <div class="pagination-info">
+                    Showing {{ getStartRecord() }}-{{ getEndRecord() }} of
+                    {{ filteredData.length }} items
                 </div>
+
+                <div class="pagination-controls">
+                    <button
+                        class="page-btn"
+                        [disabled]="currentPage === 1"
+                        (click)="goToPage(1)"
+                        aria-label="Go to first page"
+                    >
+                        ⏮️
+                    </button>
+
+                    <button
+                        class="page-btn"
+                        [disabled]="currentPage === 1"
+                        (click)="goToPage(currentPage - 1)"
+                        aria-label="Go to previous page"
+                    >
+                        ◀️
+                    </button>
+
+                    <span class="page-numbers">
+                        @for (page of getVisiblePages(); track page) {
+                        <button
+                            class="page-btn"
+                            [class.active]="page === currentPage"
+                            (click)="goToPage(page)"
+                            [attr.aria-label]="'Go to page ' + page"
+                            [attr.aria-current]="
+                                page === currentPage ? 'page' : null
+                            "
+                        >
+                            {{ page }}
+                        </button>
+                        }
+                    </span>
+
+                    <button
+                        class="page-btn"
+                        [disabled]="currentPage === totalPages"
+                        (click)="goToPage(currentPage + 1)"
+                        aria-label="Go to next page"
+                    >
+                        ▶️
+                    </button>
+
+                    <button
+                        class="page-btn"
+                        [disabled]="currentPage === totalPages"
+                        (click)="goToPage(totalPages)"
+                        aria-label="Go to last page"
+                    >
+                        ⏭️
+                    </button>
+                </div>
+
+                <div class="page-size-selector">
+                    <label for="pageSize">Show:</label>
+                    <select
+                        id="pageSize"
+                        [(ngModel)]="pageSize"
+                        (ngModelChange)="onPageSizeChange($event)"
+                    >
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>per page</span>
+                </div>
+            </div>
             }
         </div>
     `,

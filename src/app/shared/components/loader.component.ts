@@ -24,7 +24,7 @@ export type LoaderColor =
             >
                 <div class="spinner"></div>
                 @if (message) {
-                    <div class="loader-message">{{ message }}</div>
+                <div class="loader-message">{{ message }}</div>
                 }
             </div>
         </div>

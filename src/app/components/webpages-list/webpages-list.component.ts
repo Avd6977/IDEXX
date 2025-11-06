@@ -93,15 +93,15 @@ import { TimeAgoPipe } from 'src/app/shared/pipes/time-ago.pipe';
                             </button>
                         </div>
                         @if (showLoaderDemo) {
-                            <div class="loader-demo">
-                                <app-loader
-                                    [size]="loaderSize"
-                                    [color]="'primary'"
-                                    [message]="'Demo loader...'"
-                                    [overlay]="false"
-                                >
-                                </app-loader>
-                            </div>
+                        <div class="loader-demo">
+                            <app-loader
+                                [size]="loaderSize"
+                                [color]="'primary'"
+                                [message]="'Demo loader...'"
+                                [overlay]="false"
+                            >
+                            </app-loader>
+                        </div>
                         }
                     </div>
 
@@ -205,19 +205,19 @@ import { TimeAgoPipe } from 'src/app/shared/pipes/time-ago.pipe';
                 </div>
 
                 @if (interceptorLogs.length > 0) {
-                    <div class="interceptor-logs">
-                        <h4>Interceptor Activity:</h4>
-                        <div class="log-entries">
-                            @for (log of interceptorLogs; track log.timestamp) {
-                                <div class="log-entry">
-                                    <span class="log-time">{{
-                                        log.timestamp | timeAgo
-                                    }}</span>
-                                    <span class="log-message">{{ log.message }}</span>
-                                </div>
-                            }
+                <div class="interceptor-logs">
+                    <h4>Interceptor Activity:</h4>
+                    <div class="log-entries">
+                        @for (log of interceptorLogs; track log.timestamp) {
+                        <div class="log-entry">
+                            <span class="log-time">{{
+                                log.timestamp | timeAgo
+                            }}</span>
+                            <span class="log-message">{{ log.message }}</span>
                         </div>
+                        }
                     </div>
+                </div>
                 }
             </div>
         </div>
@@ -644,11 +644,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                         'Deleted!',
                         'The webpage has been deleted.'
                     );
-                } else {
-                    this.notificationService.info(
-                        'Cancelled',
-                        'Deletion was cancelled.'
-                    );
                 }
             });
     }
@@ -662,11 +657,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                     this.notificationService.warning(
                         'Left without saving',
                         'Your changes were not saved.'
-                    );
-                } else {
-                    this.notificationService.info(
-                        'Stayed',
-                        'You remained to save your changes.'
                     );
                 }
             });
@@ -684,11 +674,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                     this.notificationService.success(
                         'Action performed!',
                         'Your custom action was completed.'
-                    );
-                } else {
-                    this.notificationService.info(
-                        'Action cancelled',
-                        'The custom action was not performed.'
                     );
                 }
             });
