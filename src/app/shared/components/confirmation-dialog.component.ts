@@ -1,0 +1,300 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subject, Observable } from 'rxjs';
+
+export interface ConfirmationDialogData {
+    title: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    type?: 'danger' | 'warning' | 'info';
+}
+
+// Simple dialog implementation without Angular CDK for interview purposes
+@Component({
+    selector: 'app-confirmation-dialog',
+    standalone: true,
+    imports: [CommonModule],
+    template: `
+        <div
+            class="dialog-overlay"
+            (click)="onOverlayClick()"
+            [class.show]="isVisible"
+        >
+            <div
+                class="dialog-container"
+                [class]="getDialogClass()"
+                (click)="$event.stopPropagation()"
+            >
+                <div class="dialog-header">
+                    <h3 class="dialog-title">{{ data.title }}</h3>
+                    <button
+                        class="close-button"
+                        (click)="onCancel()"
+                        aria-label="Close dialog"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="dialog-body">
+                    <p class="dialog-message">{{ data.message }}</p>
+                </div>
+
+                <div class="dialog-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        (click)="onCancel()"
+                    >
+                        {{ data.cancelText || 'Cancel' }}
+                    </button>
+                    <button
+                        type="button"
+                        class="btn"
+                        [class]="getConfirmButtonClass()"
+                        (click)="onConfirm()"
+                        [attr.aria-describedby]="'dialog-message'"
+                    >
+                        {{ data.confirmText || 'Confirm' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `,
+    styles: [
+        `
+            .dialog-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1050;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .dialog-overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .dialog-container {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                max-width: 500px;
+                width: 90%;
+                max-height: 90vh;
+                overflow: hidden;
+                transform: scale(0.8);
+                transition: transform 0.3s ease;
+            }
+
+            .dialog-overlay.show .dialog-container {
+                transform: scale(1);
+            }
+
+            .dialog-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                border-bottom: 1px solid #e5e7eb;
+                background: #f9fafb;
+            }
+
+            .dialog-title {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: #1f2937;
+            }
+
+            .close-button {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                color: #6b7280;
+                transition: all 0.2s ease;
+            }
+
+            .close-button:hover {
+                background: #e5e7eb;
+                color: #374151;
+            }
+
+            .dialog-body {
+                padding: 1.5rem;
+            }
+
+            .dialog-message {
+                margin: 0;
+                color: #4b5563;
+                line-height: 1.6;
+            }
+
+            .dialog-footer {
+                display: flex;
+                justify-content: flex-end;
+                gap: 0.75rem;
+                padding: 1.5rem;
+                border-top: 1px solid #e5e7eb;
+                background: #f9fafb;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
+                border: none;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                min-width: 80px;
+            }
+
+            .btn-secondary {
+                background: #f3f4f6;
+                color: #374151;
+                border: 1px solid #d1d5db;
+            }
+
+            .btn-secondary:hover {
+                background: #e5e7eb;
+            }
+
+            .btn-primary {
+                background: #3b82f6;
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background: #2563eb;
+            }
+
+            .btn-danger {
+                background: #ef4444;
+                color: white;
+            }
+
+            .btn-danger:hover {
+                background: #dc2626;
+            }
+
+            .btn-warning {
+                background: #f59e0b;
+                color: white;
+            }
+
+            .btn-warning:hover {
+                background: #d97706;
+            }
+
+            /* Dialog type styling */
+            .dialog-container.danger .dialog-header {
+                border-bottom-color: #fecaca;
+                background: #fef2f2;
+            }
+
+            .dialog-container.danger .dialog-title {
+                color: #dc2626;
+            }
+
+            .dialog-container.warning .dialog-header {
+                border-bottom-color: #fed7aa;
+                background: #fffbeb;
+            }
+
+            .dialog-container.warning .dialog-title {
+                color: #d97706;
+            }
+
+            /* Focus management */
+            .btn:focus {
+                outline: 2px solid #3b82f6;
+                outline-offset: 2px;
+            }
+
+            /* Responsive */
+            @media (max-width: 640px) {
+                .dialog-container {
+                    margin: 1rem;
+                }
+
+                .dialog-footer {
+                    flex-direction: column-reverse;
+                }
+
+                .btn {
+                    width: 100%;
+                }
+            }
+        `
+    ]
+})
+export class ConfirmationDialogComponent {
+    isVisible = false;
+    data: ConfirmationDialogData = {
+        title: '',
+        message: '',
+        type: 'info'
+    };
+
+    private resultSubject = new Subject<boolean>();
+
+    show(data: ConfirmationDialogData): Observable<boolean> {
+        this.data = data;
+        this.isVisible = true;
+        this.resultSubject = new Subject<boolean>();
+
+        return this.resultSubject.asObservable();
+    }
+
+    onConfirm(): void {
+        this.close(true);
+    }
+
+    onCancel(): void {
+        this.close(false);
+    }
+
+    onOverlayClick(): void {
+        this.close(false);
+    }
+
+    private close(result: boolean): void {
+        this.isVisible = false;
+        this.resultSubject.next(result);
+        this.resultSubject.complete();
+    }
+
+    getDialogClass(): string {
+        return this.data.type || 'info';
+    }
+
+    getConfirmButtonClass(): string {
+        switch (this.data.type) {
+            case 'danger':
+                return 'btn-danger';
+            case 'warning':
+                return 'btn-warning';
+            default:
+                return 'btn-primary';
+        }
+    }
+}

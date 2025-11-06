@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { WebpageLoaderComponent } from './webpage-loader.component';
-import * as WebpageActions from '../../store/webpage.actions';
+import { WebpageLoaderComponent } from 'src/app/components/webpage-loader/webpage-loader.component';
+import * as WebpageActions from 'src/app/store/webpage.actions';
 import {
     selectCurrentUrl,
     selectIsLoading,
     selectError
-} from '../../store/webpage.selectors';
+} from 'src/app/store/webpage.selectors';
 
 describe('WebpageLoaderComponent', () => {
     let component: WebpageLoaderComponent;

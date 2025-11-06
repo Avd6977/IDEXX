@@ -4,10 +4,15 @@
     <nav>
       <a routerLink="/webpage-loader" routerLinkActive="active">Webpage Loader</a>
       <a routerLink="/webpage-form" routerLinkActive="active">Add Webpage</a>
+      <a routerLink="/webpages-list" routerLinkActive="active">Webpage List</a>
     </nav>
   </header>
   
   <main class="app-main">
     <router-outlet></router-outlet>
   </main>
+  
+  <!-- Global Components -->
+  <app-notification-container></app-notification-container>
+  <app-confirmation-dialog></app-confirmation-dialog>
 </div>

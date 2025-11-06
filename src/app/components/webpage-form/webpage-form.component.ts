@@ -6,7 +6,7 @@ import {
     FormGroup,
     Validators
 } from '@angular/forms';
-import { WebpageService, WebpageData } from '../../services/webpage.service';
+import { WebpageService, WebpageData } from 'src/app/services/webpage.service';
 
 @Component({
     selector: 'app-webpage-form',

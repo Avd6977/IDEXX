@@ -3,7 +3,7 @@ import {
     HttpClientTestingModule,
     HttpTestingController
 } from '@angular/common/http/testing';
-import { WebpageService, WebpageData } from './webpage.service';
+import { WebpageService, WebpageData } from 'src/app/services/webpage.service';
 
 describe('WebpageService', () => {
     let service: WebpageService;

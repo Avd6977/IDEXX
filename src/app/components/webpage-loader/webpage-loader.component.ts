@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import * as WebpageActions from '../../store/webpage.actions';
+import * as WebpageActions from 'src/app/store/webpage.actions';
 import {
     selectCurrentUrl,
     selectIsLoading,
     selectError
-} from '../../store/webpage.selectors';
+} from 'src/app/store/webpage.selectors';
 
 @Component({
     selector: 'app-webpage-loader',

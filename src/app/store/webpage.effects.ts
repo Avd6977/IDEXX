@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import * as WebpageActions from './webpage.actions';
+import * as WebpageActions from 'src/app/store/webpage.actions';
 
 @Injectable()
 export class WebpageEffects {

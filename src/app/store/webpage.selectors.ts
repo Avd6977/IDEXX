@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { WebpageState } from './webpage.reducer';
+import { WebpageState } from 'src/app/store/webpage.reducer';
 
 export const selectWebpageState =
     createFeatureSelector<WebpageState>('webpage');

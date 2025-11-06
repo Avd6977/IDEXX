@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { WebpageFormComponent } from './webpage-form.component';
-import { WebpageService } from '../../services/webpage.service';
+import { WebpageFormComponent } from 'src/app/components/webpage-form/webpage-form.component';
+import { WebpageService } from 'src/app/services/webpage.service';
 
 describe('WebpageFormComponent', () => {
     let component: WebpageFormComponent;

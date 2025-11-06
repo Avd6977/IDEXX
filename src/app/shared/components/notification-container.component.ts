@@ -1,0 +1,304 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import {
+    NotificationService,
+    Notification
+} from 'src/app/shared/components/notification.service';
+
+@Component({
+    selector: 'app-notification-container',
+    standalone: true,
+    imports: [CommonModule],
+    template: `
+        <div
+            class="notification-container"
+            aria-live="polite"
+            aria-label="Notifications"
+        >
+            <div
+                *ngFor="let notification of notifications; trackBy: trackById"
+                class="notification"
+                [class]="getNotificationClass(notification)"
+                [attr.role]="notification.type === 'error' ? 'alert' : 'status'"
+            >
+                <div class="notification-icon">
+                    <span [innerHTML]="getIcon(notification.type)"></span>
+                </div>
+
+                <div class="notification-content">
+                    <div class="notification-title">
+                        {{ notification.title }}
+                    </div>
+                    <div
+                        class="notification-message"
+                        *ngIf="notification.message"
+                    >
+                        {{ notification.message }}
+                    </div>
+                    <div class="notification-timestamp">
+                        {{ formatTime(notification.timestamp) }}
+                    </div>
+                </div>
+
+                <button
+                    class="notification-close"
+                    (click)="closeNotification(notification.id)"
+                    [attr.aria-label]="
+                        'Close ' + notification.title + ' notification'
+                    "
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    `,
+    styles: [
+        `
+            .notification-container {
+                position: fixed;
+                top: 1rem;
+                right: 1rem;
+                z-index: 1100;
+                max-width: 400px;
+                width: 100%;
+            }
+
+            .notification {
+                display: flex;
+                align-items: flex-start;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                margin-bottom: 0.75rem;
+                padding: 1rem;
+                border-left: 4px solid;
+                animation: slideIn 0.3s ease-out;
+                transition: transform 0.2s ease, opacity 0.2s ease;
+            }
+
+            .notification:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+            }
+
+            .notification.success {
+                border-left-color: #10b981;
+                background: #f0fdf4;
+            }
+
+            .notification.error {
+                border-left-color: #ef4444;
+                background: #fef2f2;
+            }
+
+            .notification.warning {
+                border-left-color: #f59e0b;
+                background: #fffbeb;
+            }
+
+            .notification.info {
+                border-left-color: #3b82f6;
+                background: #eff6ff;
+            }
+
+            .notification-icon {
+                margin-right: 0.75rem;
+                flex-shrink: 0;
+                font-size: 1.25rem;
+                margin-top: 0.125rem;
+            }
+
+            .notification.success .notification-icon {
+                color: #10b981;
+            }
+
+            .notification.error .notification-icon {
+                color: #ef4444;
+            }
+
+            .notification.warning .notification-icon {
+                color: #f59e0b;
+            }
+
+            .notification.info .notification-icon {
+                color: #3b82f6;
+            }
+
+            .notification-content {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .notification-title {
+                font-weight: 600;
+                color: #1f2937;
+                font-size: 0.875rem;
+                line-height: 1.25;
+                margin-bottom: 0.25rem;
+            }
+
+            .notification-message {
+                color: #4b5563;
+                font-size: 0.8125rem;
+                line-height: 1.4;
+                margin-bottom: 0.5rem;
+            }
+
+            .notification-timestamp {
+                color: #9ca3af;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            .notification-close {
+                background: none;
+                border: none;
+                color: #9ca3af;
+                cursor: pointer;
+                font-size: 1.25rem;
+                padding: 0;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 4px;
+                transition: all 0.2s ease;
+                margin-left: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .notification-close:hover {
+                background: rgba(0, 0, 0, 0.1);
+                color: #6b7280;
+            }
+
+            .notification-close:focus {
+                outline: 2px solid #3b82f6;
+                outline-offset: 1px;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+
+            .notification.removing {
+                animation: slideOut 0.3s ease-in forwards;
+            }
+
+            /* Responsive */
+            @media (max-width: 640px) {
+                .notification-container {
+                    top: 0.5rem;
+                    right: 0.5rem;
+                    left: 0.5rem;
+                    max-width: none;
+                }
+
+                .notification {
+                    margin-bottom: 0.5rem;
+                    padding: 0.875rem;
+                }
+
+                .notification-title {
+                    font-size: 0.8125rem;
+                }
+
+                .notification-message {
+                    font-size: 0.75rem;
+                }
+            }
+
+            /* Accessibility */
+            @media (prefers-reduced-motion: reduce) {
+                .notification,
+                .notification-close {
+                    transition: none;
+                }
+
+                .notification {
+                    animation: none;
+                }
+
+                .notification.removing {
+                    animation: none;
+                }
+            }
+        `
+    ]
+})
+export class NotificationContainerComponent implements OnInit, OnDestroy {
+    notifications: Notification[] = [];
+    private subscription?: Subscription;
+
+    constructor(private notificationService: NotificationService) {}
+
+    ngOnInit(): void {
+        this.subscription = this.notificationService.notifications$.subscribe(
+            (notifications) => {
+                this.notifications = notifications;
+            }
+        );
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+    closeNotification(id: string): void {
+        this.notificationService.remove(id);
+    }
+
+    getNotificationClass(notification: Notification): string {
+        return `notification-${notification.type}`;
+    }
+
+    getIcon(type: string): string {
+        const icons = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+        return icons[type as keyof typeof icons] || icons.info;
+    }
+
+    formatTime(date: Date): string {
+        const now = new Date();
+        const diff = now.getTime() - date.getTime();
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+
+        if (seconds < 60) return 'just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+
+        return date.toLocaleDateString();
+    }
+
+    trackById(index: number, notification: Notification): string {
+        return notification.id;
+    }
+}
