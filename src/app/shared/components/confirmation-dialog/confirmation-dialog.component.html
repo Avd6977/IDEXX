@@ -1,0 +1,45 @@
+<div
+    class="dialog-overlay"
+    (click)="onOverlayClick()"
+    [class.show]="isVisible"
+>
+    <div
+        class="dialog-container"
+        [class]="getDialogClass()"
+        (click)="$event.stopPropagation()"
+    >
+        <div class="dialog-header">
+            <h3 class="dialog-title">{{ data.title }}</h3>
+            <button
+                class="close-button"
+                (click)="onCancel()"
+                aria-label="Close dialog"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="dialog-body">
+            <p class="dialog-message">{{ data.message }}</p>
+        </div>
+
+        <div class="dialog-footer">
+            <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="onCancel()"
+            >
+                {{ data.cancelText || 'Cancel' }}
+            </button>
+            <button
+                type="button"
+                class="btn"
+                [class]="getConfirmButtonClass()"
+                (click)="onConfirm()"
+                [attr.aria-describedby]="'dialog-message'"
+            >
+                {{ data.confirmText || 'Confirm' }}
+            </button>
+        </div>
+    </div>
+</div>

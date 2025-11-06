@@ -1,8 +1,8 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NotificationContainerComponent } from 'src/app/shared/components/notification-container.component';
-import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog.component';
-import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog.service';
+import { NotificationContainerComponent } from 'src/app/shared/components/notification-container/notification-container.component';
+import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.service';
 
 @Component({
     selector: 'app-root',

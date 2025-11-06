@@ -1,0 +1,14 @@
+<div class="loader-container" [class.overlay]="overlay">
+    <div
+        class="loader"
+        [class]="getLoaderClasses()"
+        [attr.aria-label]="message || 'Loading...'"
+        role="status"
+        [attr.aria-live]="'polite'"
+    >
+        <div class="spinner"></div>
+        @if (message) {
+        <div class="loader-message">{{ message }}</div>
+        }
+    </div>
+</div>

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoaderComponent } from 'src/app/shared/components/loader.component';
+import { LoaderComponent } from './loader.component';
 
 describe('LoaderComponent', () => {
     let component: LoaderComponent;

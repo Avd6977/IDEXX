@@ -1,0 +1,195 @@
+<div class="webpages-list-container">
+    <div class="page-header">
+        <h2>Webpages Management</h2>
+        <div class="page-actions">
+            <button class="btn btn-primary" (click)="refreshData()">
+                🔄 Refresh
+            </button>
+            <button class="btn btn-success" (click)="showSuccessDemo()">
+                ✅ Success Demo
+            </button>
+            <button class="btn btn-warning" (click)="showWarningDemo()">
+                ⚠️ Warning Demo
+            </button>
+            <button class="btn btn-danger" (click)="showErrorDemo()">
+                ❌ Error Demo
+            </button>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h3>Data Table Demo</h3>
+        <p class="demo-description">
+            This demonstrates sorting, filtering, pagination, and row
+            actions. The table shows webpage data with different column
+            types and custom pipes.
+        </p>
+
+        <app-data-table
+            [data]="webpages"
+            [columns]="tableColumns"
+            [loading]="isLoading"
+            [searchable]="true"
+            [pageSize]="10"
+            (rowClick)="onRowClick($event)"
+            (sort)="onSort($event)"
+            (filter)="onFilter($event)"
+            (pagination)="onPagination($event)"
+        >
+        </app-data-table>
+    </div>
+
+    <div class="demo-section">
+        <h3>Component Demos</h3>
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h4>Loading States</h4>
+                <div class="demo-buttons">
+                    <button
+                        class="btn btn-outline"
+                        (click)="showLoader('small')"
+                    >
+                        Small Loader
+                    </button>
+                    <button
+                        class="btn btn-outline"
+                        (click)="showLoader('medium')"
+                    >
+                        Medium Loader
+                    </button>
+                    <button
+                        class="btn btn-outline"
+                        (click)="showLoader('large')"
+                    >
+                        Large Loader
+                    </button>
+                </div>
+                @if (showLoaderDemo) {
+                <div class="loader-demo">
+                    <app-loader
+                        [size]="loaderSize"
+                        [color]="'primary'"
+                        [message]="'Demo loader...'"
+                        [overlay]="false"
+                    >
+                    </app-loader>
+                </div>
+                }
+            </div>
+
+            <div class="demo-card">
+                <h4>Notifications</h4>
+                <div class="demo-buttons">
+                    <button
+                        class="btn btn-success"
+                        (click)="showSuccessDemo()"
+                    >
+                        Success
+                    </button>
+                    <button
+                        class="btn btn-info"
+                        (click)="showInfoDemo()"
+                    >
+                        Info
+                    </button>
+                    <button
+                        class="btn btn-warning"
+                        (click)="showWarningDemo()"
+                    >
+                        Warning
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        (click)="showErrorDemo()"
+                    >
+                        Error
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-card">
+                <h4>Confirmations</h4>
+                <div class="demo-buttons">
+                    <button
+                        class="btn btn-outline"
+                        (click)="showDeleteConfirm()"
+                    >
+                        Delete Confirm
+                    </button>
+                    <button
+                        class="btn btn-outline"
+                        (click)="showUnsavedConfirm()"
+                    >
+                        Unsaved Changes
+                    </button>
+                    <button
+                        class="btn btn-outline"
+                        (click)="showCustomConfirm()"
+                    >
+                        Custom Action
+                    </button>
+                </div>
+            </div>
+
+            <div class="demo-card">
+                <h4>Custom Pipes</h4>
+                <div class="pipe-demos">
+                    <div class="pipe-example">
+                        <strong>Truncate Pipe:</strong><br />
+                        <span>{{
+                            longText | truncate : 50 : '...'
+                        }}</span>
+                    </div>
+                    <div class="pipe-example">
+                        <strong>Time Ago Pipe:</strong><br />
+                        <span>{{ sampleDate | timeAgo }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h3>HTTP Interceptors Demo</h3>
+        <p class="demo-description">
+            The following actions demonstrate HTTP interceptors in
+            action:
+        </p>
+        <div class="demo-buttons">
+            <button
+                class="btn btn-outline"
+                (click)="triggerAuthInterceptor()"
+            >
+                Test Auth Header
+            </button>
+            <button
+                class="btn btn-outline"
+                (click)="triggerErrorInterceptor()"
+            >
+                Test Error Handling
+            </button>
+            <button
+                class="btn btn-outline"
+                (click)="triggerLoadingInterceptor()"
+            >
+                Test Loading State
+            </button>
+        </div>
+
+        @if (interceptorLogs.length > 0) {
+        <div class="interceptor-logs">
+            <h4>Interceptor Activity:</h4>
+            <div class="log-entries">
+                @for (log of interceptorLogs; track log.timestamp) {
+                <div class="log-entry">
+                    <span class="log-time">{{
+                        log.timestamp | timeAgo
+                    }}</span>
+                    <span class="log-message">{{ log.message }}</span>
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>

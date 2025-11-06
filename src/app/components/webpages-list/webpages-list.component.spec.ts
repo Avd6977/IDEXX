@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WebpagesListComponent } from 'src/app/components/webpages-list/webpages-list.component';
-import { NotificationService } from 'src/app/shared/components/notification.service';
-import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog.service';
+import { NotificationService } from 'src/app/shared/components/notification-container/notification.service';
+import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.service';
 import { WebpageService } from 'src/app/services/webpage.service';
 
 describe('WebpagesListComponent', () => {

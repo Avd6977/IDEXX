@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import {
     ConfirmationDialogComponent,
     ConfirmationDialogData
-} from 'src/app/shared/components/confirmation-dialog.component';
+} from './confirmation-dialog.component';
 
 @Injectable({
     providedIn: 'root'
