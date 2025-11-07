@@ -33,6 +33,7 @@ describe('WebpageFormComponent', () => {
         expect(component.webpageForm.get('url')?.value).toBe('');
         expect(component.webpageForm.get('title')?.value).toBe('');
         expect(component.webpageForm.get('description')?.value).toBe('');
+        expect(component.webpageForm.get('publishDate')?.value).toBe('');
     });
 
     it('should validate required URL field', () => {
@@ -45,6 +46,14 @@ describe('WebpageFormComponent', () => {
 
         urlControl?.setValue('https://example.com');
         expect(urlControl?.valid).toBeTruthy();
+    });
+
+    it('should set minDate to today', () => {
+        const today = new Date();
+        const expectedDate = `${today.getFullYear()}-${String(
+            today.getMonth() + 1
+        ).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        expect(component.minDate).toBe(expectedDate);
     });
 
     it('should submit form when valid', () => {
@@ -84,13 +93,15 @@ describe('WebpageFormComponent', () => {
     it('should reset form', () => {
         component.webpageForm.patchValue({
             url: 'https://test.com',
-            title: 'Test'
+            title: 'Test',
+            publishDate: '2025-12-31'
         });
 
         component.resetForm();
 
         expect(component.webpageForm.get('url')?.value).toBeNull();
         expect(component.webpageForm.get('title')?.value).toBeNull();
+        expect(component.webpageForm.get('publishDate')?.value).toBeNull();
     });
 
     it('should prevent deactivation when form is dirty', () => {

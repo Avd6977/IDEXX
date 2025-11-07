@@ -51,6 +51,18 @@
             ></textarea>
         </div>
 
+        <div class="form-group">
+            <label for="publishDate">Publish Date (Optional)</label>
+            <input
+                type="date"
+                id="publishDate"
+                formControlName="publishDate"
+                class="form-control"
+                [min]="minDate"
+            />
+            <small class="form-text">Select today or any future date</small>
+        </div>
+
         <div class="form-actions">
             <button
                 type="submit"

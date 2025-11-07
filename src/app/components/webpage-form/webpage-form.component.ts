@@ -19,11 +19,15 @@ export class WebpageFormComponent implements OnInit {
     webpageForm!: FormGroup;
     isLoading = false;
     formStatus: { type: 'success' | 'error'; message: string } | null = null;
+    minDate: string = '';
 
     constructor(
         private formBuilder: FormBuilder,
         private webpageService: WebpageService
-    ) {}
+    ) {
+        // Set min date to today
+        this.minDate = this.getTodayDateString();
+    }
 
     ngOnInit(): void {
         this.initializeForm();
@@ -36,12 +40,25 @@ export class WebpageFormComponent implements OnInit {
                 [Validators.required, Validators.pattern(/^https?:\/\/.+/)]
             ],
             title: [''],
-            description: ['']
+            description: [''],
+            publishDate: ['']
         });
+    }
+
+    private getTodayDateString(): string {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
     get url() {
         return this.webpageForm.get('url');
+    }
+
+    get publishDate() {
+        return this.webpageForm.get('publishDate');
     }
 
     onSubmit(): void {
