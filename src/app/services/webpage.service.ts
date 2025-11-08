@@ -12,6 +12,7 @@ export interface WebpageData {
     url: string;
     title?: string;
     description?: string;
+    publishDate?: string;
     createdAt?: Date;
 }
 
@@ -19,7 +20,9 @@ export interface WebpageData {
     providedIn: 'root'
 })
 export class WebpageService {
-    private apiUrl = 'https://api.example.com/webpages'; // Replace with your actual API endpoint
+    // Use relative path - this will connect to the same host where the Angular app is served
+    // For local development, ensure your backend API is running on the same port or configure CORS
+    private apiUrl = '/api/webpages';
 
     constructor(private http: HttpClient) {}
 

@@ -63,7 +63,8 @@ describe('WebpageFormComponent', () => {
         component.webpageForm.patchValue({
             url: 'https://test.com',
             title: 'Test Site',
-            description: 'Test description'
+            description: 'Test description',
+            publishDate: '2025-12-31'
         });
 
         component.onSubmit();
@@ -71,7 +72,8 @@ describe('WebpageFormComponent', () => {
         expect(mockWebpageService.createWebpage).toHaveBeenCalledWith({
             url: 'https://test.com',
             title: 'Test Site',
-            description: 'Test description'
+            description: 'Test description',
+            publishDate: '2025-12-31'
         });
     });
 

@@ -48,6 +48,23 @@ src/
    npm start
    ```
 
+   The app will be available at `http://localhost:4200`
+
+3. **API Configuration (Important)**:
+   
+   The application expects a backend API running at `http://localhost:3000` with the following endpoints:
+   - `GET /webpages` - Get all webpages
+   - `GET /webpages/:id` - Get a specific webpage
+   - `POST /webpages` - Create a new webpage
+   - `PUT /webpages/:id` - Update a webpage
+   - `DELETE /webpages/:id` - Delete a webpage
+
+   The proxy configuration in `proxy.conf.json` automatically forwards `/api/*` requests to your backend server.
+
+   **To connect to your backend:**
+   - Ensure your backend is running on `http://localhost:3000`
+   - Or update the `target` in `proxy.conf.json` to match your backend URL
+
 3. Open your browser and navigate to `http://localhost:4200`
 
 ### Running Tests

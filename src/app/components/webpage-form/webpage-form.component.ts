@@ -69,7 +69,8 @@ export class WebpageFormComponent implements OnInit {
             const webpageData: WebpageData = {
                 url: this.webpageForm.value.url,
                 title: this.webpageForm.value.title || undefined,
-                description: this.webpageForm.value.description || undefined
+                description: this.webpageForm.value.description || undefined,
+                publishDate: this.webpageForm.value.publishDate || undefined
             };
 
             this.webpageService.createWebpage(webpageData).subscribe({
