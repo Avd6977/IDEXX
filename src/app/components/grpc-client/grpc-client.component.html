@@ -1,0 +1,84 @@
+<div class="grpc-client-container">
+    <h2>gRPC Service Client</h2>
+
+    <div class="info-panel">
+        <p><strong>Endpoint:</strong> {{ grpcEndpoint }}</p>
+        <p class="text-muted">Demonstrates gRPC unary RPC communication pattern</p>
+    </div>
+
+    <form [formGroup]="requestForm" (ngSubmit)="sendRequest()" class="grpc-form">
+        <div class="form-group">
+            <label for="serviceName">Service Method</label>
+            <select id="serviceName" formControlName="serviceName" class="form-control">
+                <option value="helloworld.Greeter/SayHello">helloworld.Greeter/SayHello</option>
+                <option value="other">Other Services</option>
+            </select>
+            <small class="form-text">Select the gRPC service method to call</small>
+        </div>
+
+        <div class="form-group">
+            <label for="requestData">Request Data (JSON)</label>
+            <textarea
+                id="requestData"
+                formControlName="requestData"
+                class="form-control"
+                rows="4"
+                placeholder='{"name": "User"}'
+            ></textarea>
+            @if (requestError) {
+                <div class="invalid-feedback">{{ requestError }}</div>
+            }
+        </div>
+
+        <div class="form-actions">
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="!requestForm.valid || isLoading"
+            >
+                @if (isLoading) {
+                    <span class="loading-spinner"></span>
+                }
+                {{ isLoading ? 'Calling Service...' : 'Call gRPC Service' }}
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="clearResponse()"
+            >
+                Clear Response
+            </button>
+        </div>
+    </form>
+
+    @if (callStatus) {
+        <div class="status-panel" [class.status-success]="callStatus.type === 'success'" [class.status-error]="callStatus.type === 'error'">
+            <div class="status-header">
+                <strong>{{ callStatus.type === 'success' ? '✅ Success' : '❌ Error' }}</strong>
+            </div>
+            <div class="status-content">
+                {{ callStatus.message }}
+            </div>
+        </div>
+    }
+
+    @if (responseData) {
+        <div class="response-panel">
+            <h4>Response Data</h4>
+            <pre>{{ responseData | json }}</pre>
+        </div>
+    }
+
+    <div class="documentation-panel">
+        <h4>How to Use gRPC with Angular</h4>
+        <ol>
+            <li>Install gRPC dependencies: <code>npm install @grpc/grpc-js @grpc/proto-loader</code></li>
+            <li>Create .proto files defining your service contracts</li>
+            <li>Generate TypeScript code: <code>protoc --plugin=protoc-gen-ts --ts_out=. service.proto</code></li>
+            <li>Create a service class to wrap the generated gRPC client</li>
+            <li>Use RxJS Observables to handle async gRPC calls</li>
+        </ol>
+        <p><strong>Note:</strong> This demo uses mock data. Replace with actual gRPC client calls in production.</p>
+    </div>
+</div>
