@@ -91,7 +91,7 @@ export class DataTableComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private filterData(data: any[], term: string): any[] {
-        if (!term.trim()) return data;
+        if (!term.trim()) return [...data];
 
         return data.filter((item) => {
             return this.columns.some((column) => {

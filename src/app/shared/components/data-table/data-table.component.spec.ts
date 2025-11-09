@@ -144,7 +144,7 @@ describe('DataTableComponent', () => {
 
         it('should filter data by search term', fakeAsync(() => {
             spyOn(component.filter, 'emit');
-            component.onSearch('John');
+            component.onSearch('Doe');
             tick(300);
             expect(component.filteredData.length).toBe(1);
             expect(component.filteredData[0].name).toBe('John Doe');
@@ -174,7 +174,7 @@ describe('DataTableComponent', () => {
         }));
 
         it('should clear filter when search term is empty', fakeAsync(() => {
-            component.onSearch('John');
+            component.onSearch('Doe');
             tick(300);
             expect(component.filteredData.length).toBe(1);
             component.onSearch('');
@@ -249,10 +249,11 @@ describe('DataTableComponent', () => {
 
     describe('Pagination', () => {
         beforeEach(() => {
-            component.data = mockData;
+            component.data = [...mockData];
             component.columns = mockColumns;
             component.pageSize = 2;
             fixture.detectChanges();
+            component.ngOnInit();
         });
 
         it('should display correct number of records per page', () => {

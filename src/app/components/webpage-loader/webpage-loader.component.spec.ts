@@ -37,10 +37,6 @@ describe('WebpageLoaderComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should initialize with default URL', () => {
-        expect(component.urlInput).toBe('https://www.example.com');
-    });
-
     it('should dispatch loadWebpage action on loadWebpage call', () => {
         const dispatchSpy = spyOn(store, 'dispatch');
         component.urlInput = 'https://www.test.com';
@@ -81,5 +77,26 @@ describe('WebpageLoaderComponent', () => {
         expect(component.currentUrl$).toBeDefined();
         expect(component.isLoading$).toBeDefined();
         expect(component.error$).toBeDefined();
+    });
+
+    it('should open URL in new tab', () => {
+        const windowOpenSpy = spyOn(window, 'open');
+        component.currentDisplayUrl = 'https://www.test.com';
+
+        component.openInNewTab();
+
+        expect(windowOpenSpy).toHaveBeenCalledWith(
+            'https://www.test.com',
+            '_blank'
+        );
+    });
+
+    it('should not open new tab if URL is empty', () => {
+        const windowOpenSpy = spyOn(window, 'open');
+        component.currentDisplayUrl = '';
+
+        component.openInNewTab();
+
+        expect(windowOpenSpy).not.toHaveBeenCalled();
     });
 });

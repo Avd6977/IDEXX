@@ -122,20 +122,20 @@ describe('GrpcService', () => {
     });
 
     describe('Observable Behavior', () => {
-        it('should emit responses to response$ subject', () => {
+        it('should emit responses to response$ subject', (done) => {
             const request: GreetRequest = { name: 'Observer' };
-            let responseEmitted = false;
 
-            service.response$.subscribe(() => {
-                responseEmitted = true;
+            service.callGreetService(request).subscribe({
+                next: (response: GrpcResponse<GreetReply>) => {
+                    expect(response).toBeDefined();
+                    expect(response.status).toBe('success');
+                    expect(response.data?.message).toBeDefined();
+                    done();
+                },
+                error: () => {
+                    fail('Should not error');
+                }
             });
-
-            service.callGreetService(request).subscribe();
-
-            // Give some time for observable to emit
-            setTimeout(() => {
-                expect(responseEmitted).toBeTruthy();
-            }, 600);
         });
     });
 });

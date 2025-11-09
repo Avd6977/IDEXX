@@ -42,22 +42,8 @@
                             }}</span>
                             @if (column.sortable) {
                             <span class="sort-indicator">
-                                <span
-                                    [class.active]="
-                                        currentSort.column ===
-                                            column.key &&
-                                        currentSort.direction === 'asc'
-                                    "
-                                    >↑</span
-                                >
-                                <span
-                                    [class.active]="
-                                        currentSort.column ===
-                                            column.key &&
-                                        currentSort.direction === 'desc'
-                                    "
-                                    >↓</span
-                                >
+                                <span [class.active]="currentSort.column === column.key && currentSort.direction === 'asc'">↑</span>
+                                <span [class.active]="currentSort.column === column.key && currentSort.direction === 'desc'">↓</span>
                             </span>
                             }
                         </div>
@@ -87,10 +73,7 @@
                             rel="noopener noreferrer"
                             class="url-link"
                         >
-                            {{
-                                getValue(item, column.key)
-                                    | truncate : 40
-                            }}
+                            {{ getValue(item, column.key) | truncate : 40 }}
                         </a>
                         }
                         <!-- Date type -->
@@ -108,13 +91,7 @@
                         <!-- Default text -->
                         @default {
                         <span>
-                            {{
-                                getValue(item, column.key)
-                                    | truncate
-                                        : (column.key === 'description'
-                                              ? 80
-                                              : 50)
-                            }}
+                            {{ getValue(item, column.key) | truncate : (column.key === 'description' ? 80 : 50) }}  
                         </span>
                         } }
                     </td>

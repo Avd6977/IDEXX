@@ -17,6 +17,13 @@
         {{ (isLoading$ | async) ? 'Loading...' : 'Load Webpage' }}
       </button>
     </div>
+    <div class="help-text">
+      <p><strong>Tip:</strong> Most websites block iframe embedding. Try these URLs that allow iframes:</p>
+      <ul>
+        <li><a href="javascript:void(0)" (click)="urlInput='https://example.com'; loadWebpage()">https://example.com</a></li>
+        <li><a href="javascript:void(0)" (click)="urlInput='https://jsfiddle.net'; loadWebpage()">https://jsfiddle.net</a></li>
+      </ul>
+    </div>
   </div>
 
   <div class="content-area">
@@ -34,6 +41,12 @@
 
     @if ((currentUrl$ | async) && !(isLoading$ | async) && !(error$ | async)) {
       <div class="iframe-container">
+        <div class="iframe-notice">
+          <p>If the webpage doesn't load, it may have disabled iframe embedding for security reasons.</p>
+          <button (click)="openInNewTab()" class="open-tab-button">
+            Open in New Tab
+          </button>
+        </div>
         <iframe 
           [src]="currentUrl$ | async"
           frameborder="0"

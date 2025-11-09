@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as WebpageActions from 'src/app/store/webpage.actions';
 import {
     selectCurrentUrl,
@@ -18,19 +20,26 @@ import {
     styleUrls: ['./webpage-loader.component.scss']
 })
 export class WebpageLoaderComponent implements OnInit {
-    currentUrl$: Observable<string>;
+    currentUrl$: Observable<SafeResourceUrl>;
     isLoading$: Observable<boolean>;
     error$: Observable<string | null>;
-    urlInput: string = 'https://www.example.com';
+    urlInput: string = 'https://jsfiddle.net';
+    currentDisplayUrl: string = '';
 
-    constructor(private store: Store) {
-        this.currentUrl$ = this.store.select(selectCurrentUrl);
+    constructor(private store: Store, private sanitizer: DomSanitizer) {
+        this.currentUrl$ = this.store.select(selectCurrentUrl).pipe(
+            map((url) => {
+                this.currentDisplayUrl = url;
+                return url
+                    ? this.sanitizer.bypassSecurityTrustResourceUrl(url)
+                    : this.sanitizer.bypassSecurityTrustResourceUrl('');
+            })
+        );
         this.isLoading$ = this.store.select(selectIsLoading);
         this.error$ = this.store.select(selectError);
     }
 
     ngOnInit(): void {
-        // Load default URL on initialization
         this.loadWebpage();
     }
 
@@ -44,5 +53,11 @@ export class WebpageLoaderComponent implements OnInit {
 
     onUrlChange(url: string): void {
         this.urlInput = url;
+    }
+
+    openInNewTab(): void {
+        if (this.currentDisplayUrl) {
+            window.open(this.currentDisplayUrl, '_blank');
+        }
     }
 }

@@ -42,7 +42,7 @@ describe('WebpageService', () => {
                 expect(webpages).toEqual(mockWebpages);
             });
 
-            const req = httpMock.expectOne('https://api.example.com/webpages');
+            const req = httpMock.expectOne('/api/webpages');
             expect(req.request.method).toBe('GET');
             req.flush(mockWebpages);
         });
@@ -57,9 +57,7 @@ describe('WebpageService', () => {
 
             // Handle retry behavior - expect 4 requests (initial + 3 retries)
             for (let i = 0; i < 4; i++) {
-                const req = httpMock.expectOne(
-                    'https://api.example.com/webpages'
-                );
+                const req = httpMock.expectOne('/api/webpages');
                 req.flush('Not Found', {
                     status: 404,
                     statusText: 'Not Found'
@@ -74,9 +72,7 @@ describe('WebpageService', () => {
                 expect(webpage).toEqual(mockWebpage);
             });
 
-            const req = httpMock.expectOne(
-                'https://api.example.com/webpages/1'
-            );
+            const req = httpMock.expectOne('/api/webpages/1');
             expect(req.request.method).toBe('GET');
             req.flush(mockWebpage);
         });
@@ -93,7 +89,7 @@ describe('WebpageService', () => {
                 expect(webpage).toEqual({ ...newWebpage, id: 2 });
             });
 
-            const req = httpMock.expectOne('https://api.example.com/webpages');
+            const req = httpMock.expectOne('/api/webpages');
             expect(req.request.method).toBe('POST');
             expect(req.request.headers.get('Content-Type')).toBe(
                 'application/json'
@@ -113,9 +109,7 @@ describe('WebpageService', () => {
                 expect(webpage).toEqual(updatedWebpage);
             });
 
-            const req = httpMock.expectOne(
-                'https://api.example.com/webpages/1'
-            );
+            const req = httpMock.expectOne('/api/webpages/1');
             expect(req.request.method).toBe('PUT');
             req.flush(updatedWebpage);
         });
@@ -127,9 +121,7 @@ describe('WebpageService', () => {
                 expect(response).toEqual({});
             });
 
-            const req = httpMock.expectOne(
-                'https://api.example.com/webpages/1'
-            );
+            const req = httpMock.expectOne('/api/webpages/1');
             expect(req.request.method).toBe('DELETE');
             req.flush({});
         });

@@ -6,6 +6,7 @@ import {
 } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { GrpcClientComponent } from './grpc-client.component';
 import {
     GrpcService,
@@ -116,9 +117,11 @@ describe('GrpcClientComponent', () => {
         it('should set loading state during request', fakeAsync(() => {
             const mockResponse: GrpcResponse<GreetReply> = {
                 status: 'success',
-                data: { message: 'Hello!' }
+                data: { message: 'Hello, Test!' }
             };
-            mockGrpcService.callGreetService.and.returnValue(of(mockResponse));
+            mockGrpcService.callGreetService.and.returnValue(
+                of(mockResponse).pipe(delay(100))
+            );
 
             component.requestForm.patchValue({
                 serviceName: 'helloworld.Greeter/SayHello',
@@ -128,7 +131,7 @@ describe('GrpcClientComponent', () => {
             component.sendRequest();
             expect(component.isLoading).toBeTruthy();
 
-            tick();
+            tick(100);
             expect(component.isLoading).toBeFalsy();
         }));
 

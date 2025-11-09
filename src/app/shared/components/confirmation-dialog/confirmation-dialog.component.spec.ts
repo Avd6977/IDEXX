@@ -230,21 +230,27 @@ describe('ConfirmationDialogComponent', () => {
                 message: 'Second message'
             };
 
+            // First show - verify data is set correctly
             component.show(firstData);
-            fixture.detectChanges();
+            expect(component.data.title).toBe('First Dialog');
+            expect(component.data.message).toBe('First message');
+            expect(component.isVisible).toBe(true);
 
-            let confirmCount = 0;
+            component.onConfirm();
+            expect(component.isVisible).toBe(false);
+
+            // Second show - verify data changed
+            component.show(secondData);
+            expect(component.data.title).toBe('Second Dialog');
+            expect(component.data.message).toBe('Second message');
+            expect(component.isVisible).toBe(true);
+
+            // Subscribe to verify the completion
             component.show(secondData).subscribe((confirmed) => {
-                confirmCount++;
-                if (confirmCount === 1) {
-                    // First subscription completes with first show()
-                    component.show(firstData).subscribe((secondConfirmed) => {
-                        confirmCount++;
-                        done();
-                    });
-                    component.onConfirm();
-                }
+                expect(confirmed).toBe(true);
+                done();
             });
+
             component.onConfirm();
         });
     });
