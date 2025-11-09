@@ -25,7 +25,6 @@ export class WebpageFormComponent implements OnInit {
         private formBuilder: FormBuilder,
         private webpageService: WebpageService
     ) {
-        // Set min date to today
         this.minDate = this.getTodayDateString();
     }
 

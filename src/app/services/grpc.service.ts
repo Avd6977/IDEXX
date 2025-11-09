@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 
-/**
- * Example protobuf message types
- * In a real implementation, these would be generated from .proto files using protoc compiler
- */
 export interface GreetRequest {
     name: string;
 }
@@ -26,32 +21,16 @@ export interface GrpcResponse<T> {
     status: 'success' | 'error';
 }
 
-/**
- * gRPC Service for communicating with a gRPC microservice
- *
- * In a production environment:
- * 1. Install @grpc/grpc-js and @grpc/proto-loader
- * 2. Generate TypeScript code from .proto files using protoc compiler
- * 3. Import generated service client and message types
- * 4. Use gRPC methods directly via the generated client
- *
- * This implementation demonstrates the pattern using a mock gRPC endpoint
- */
 @Injectable({
     providedIn: 'root'
 })
 export class GrpcService {
-    // In production, this would be your actual gRPC service endpoint
     private grpcEndpoint = 'http://localhost:50051';
     private responseSubject = new Subject<GrpcResponse<any>>();
     public response$ = this.responseSubject.asObservable();
 
     constructor() {}
 
-    /**
-     * Example: Call a gRPC service method
-     * This demonstrates the pattern for calling unary RPC methods
-     */
     callGreetService(
         request: GreetRequest
     ): Observable<GrpcResponse<GreetReply>> {
@@ -61,16 +40,11 @@ export class GrpcService {
         );
     }
 
-    /**
-     * Generic method to perform gRPC calls
-     * In production, this would use the generated gRPC client
-     */
     private performGrpcCall<T>(
         servicePath: string,
         request: any
     ): Observable<GrpcResponse<T>> {
         try {
-            // Validate request
             if (!request || typeof request !== 'object') {
                 return throwError(() => ({
                     code: 'INVALID_ARGUMENT',
@@ -78,32 +52,18 @@ export class GrpcService {
                 }));
             }
 
-            // In production, you would use the generated gRPC client:
-            // const client = new ServiceClient(this.grpcEndpoint);
-            // return client.methodName(request).pipe(
-            //     map(response => ({
-            //         data: response,
-            //         status: 'success'
-            //     })),
-            //     catchError(error => this.handleGrpcError(error))
-            // );
-
-            // Demo: Simulate gRPC call with mock data
             const mockResponse = this.getMockResponse<T>(servicePath, request);
             return new Observable((observer) => {
                 setTimeout(() => {
                     observer.next(mockResponse);
                     observer.complete();
-                }, 500); // Simulate network delay
+                }, 500);
             });
         } catch (error) {
             return throwError(() => this.handleGrpcError(error));
         }
     }
 
-    /**
-     * Handle gRPC specific errors
-     */
     private handleGrpcError(error: any): GrpcResponse<any> {
         let grpcError: GrpcError = {
             code: 'UNKNOWN',
@@ -152,9 +112,6 @@ export class GrpcService {
         return grpcErrorMessages[code] || 'Unknown gRPC error';
     }
 
-    /**
-     * Mock response generation for demo purposes
-     */
     private getMockResponse<T>(
         servicePath: string,
         request: any
@@ -178,16 +135,10 @@ export class GrpcService {
         };
     }
 
-    /**
-     * Get the current gRPC endpoint
-     */
     getEndpoint(): string {
         return this.grpcEndpoint;
     }
 
-    /**
-     * Set the gRPC endpoint (useful for configuration)
-     */
     setEndpoint(endpoint: string): void {
         this.grpcEndpoint = endpoint;
     }

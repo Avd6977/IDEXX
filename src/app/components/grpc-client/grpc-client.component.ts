@@ -56,9 +56,6 @@ export class GrpcClientComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Custom validator for JSON input
-     */
     private jsonValidator(control: any) {
         try {
             JSON.parse(control.value);
@@ -68,9 +65,6 @@ export class GrpcClientComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Send gRPC request
-     */
     sendRequest(): void {
         if (!this.requestForm.valid) {
             this.requestError =
@@ -86,7 +80,6 @@ export class GrpcClientComponent implements OnInit, OnDestroy {
             const serviceName = this.requestForm.value.serviceName;
             const requestData = JSON.parse(this.requestForm.value.requestData);
 
-            // Call the appropriate service method based on selection
             let serviceCall$;
             if (serviceName === 'helloworld.Greeter/SayHello') {
                 serviceCall$ = this.grpcService.callGreetService(
@@ -120,9 +113,6 @@ export class GrpcClientComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Handle gRPC response
-     */
     private handleResponse(response: GrpcResponse<any>): void {
         if (response.status === 'success' && response.data) {
             this.callStatus = {
@@ -144,18 +134,12 @@ export class GrpcClientComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Clear response data
-     */
     clearResponse(): void {
         this.responseData = null;
         this.callStatus = null;
         this.requestError = null;
     }
 
-    /**
-     * Get form control for template
-     */
     get serviceName() {
         return this.requestForm.get('serviceName');
     }

@@ -10,9 +10,7 @@ export class WebpageEffects {
         this.actions$.pipe(
             ofType(WebpageActions.loadWebpage),
             map((action) => {
-                // In a real application, you might want to validate the URL or perform other checks
                 try {
-                    // For demonstration, we'll just return success
                     return WebpageActions.loadWebpageSuccess({
                         url: action.url
                     });

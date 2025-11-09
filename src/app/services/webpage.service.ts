@@ -26,18 +26,12 @@ export class WebpageService {
 
     constructor(private http: HttpClient) {}
 
-    /**
-     * Get all webpage entries
-     */
     getWebpages(): Observable<WebpageData[]> {
         return this.http
             .get<WebpageData[]>(this.apiUrl)
             .pipe(retry(3), catchError(this.handleError));
     }
 
-    /**
-     * Get a specific webpage by ID
-     */
     getWebpage(id: number): Observable<WebpageData> {
         const url = `${this.apiUrl}/${id}`;
         return this.http
@@ -45,9 +39,6 @@ export class WebpageService {
             .pipe(retry(3), catchError(this.handleError));
     }
 
-    /**
-     * Create a new webpage entry
-     */
     createWebpage(webpage: WebpageData): Observable<WebpageData> {
         const httpOptions = {
             headers: new HttpHeaders({
@@ -60,9 +51,6 @@ export class WebpageService {
             .pipe(catchError(this.handleError));
     }
 
-    /**
-     * Update an existing webpage entry
-     */
     updateWebpage(id: number, webpage: WebpageData): Observable<WebpageData> {
         const url = `${this.apiUrl}/${id}`;
         const httpOptions = {
@@ -76,26 +64,16 @@ export class WebpageService {
             .pipe(catchError(this.handleError));
     }
 
-    /**
-     * Delete a webpage entry
-     */
     deleteWebpage(id: number): Observable<{}> {
         const url = `${this.apiUrl}/${id}`;
         return this.http.delete(url).pipe(catchError(this.handleError));
     }
 
-    /**
-     * Check if a URL is accessible
-     */
     checkUrlAccessibility(url: string): Observable<any> {
-        // This might need to be handled differently due to CORS
-        // Consider using a proxy endpoint on your backend
+        // Consider using a proxy endpoint on your backend for CORS issues
         return this.http.head(url).pipe(catchError(this.handleError));
     }
 
-    /**
-     * Handle HTTP errors
-     */
     private handleError(error: HttpErrorResponse) {
         let errorMessage = 'An unknown error occurred';
 

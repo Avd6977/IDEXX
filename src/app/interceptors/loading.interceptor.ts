@@ -39,12 +39,6 @@ export class LoadingInterceptor implements HttpInterceptor {
     }
 
     private setLoadingState(isLoading: boolean): void {
-        // Emit loading state to a service or store
-        // Example: this.loadingService.setLoading(isLoading);
-        // Or dispatch to NgRx store
-        // Example: this.store.dispatch(setGlobalLoading({ isLoading }));
-
-        // For now, we'll use a simple DOM approach for demo
         this.updateLoadingIndicator(isLoading);
     }
 

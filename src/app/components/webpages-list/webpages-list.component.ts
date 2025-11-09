@@ -68,12 +68,11 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
         }
     ];
 
-    // Demo properties
     showLoaderDemo = false;
     loaderSize: 'small' | 'medium' | 'large' = 'medium';
     longText =
         'This is a very long text that demonstrates the truncate pipe functionality. It should be cut off after a certain number of characters with an ellipsis or custom trail.';
-    sampleDate = new Date(Date.now() - 2 * 60 * 60 * 1000); // 2 hours ago
+    sampleDate = new Date(Date.now() - 2 * 60 * 60 * 1000);
     interceptorLogs: { timestamp: Date; message: string }[] = [];
 
     constructor(
@@ -87,14 +86,13 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
     }
 
     private loadMockData(): void {
-        // Create mock data for demo purposes
         this.webpages = [
             {
                 id: 1,
                 url: 'https://www.google.com',
                 title: 'Google',
                 description: 'Search engine and technology company',
-                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) // 1 day ago
+                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
             },
             {
                 id: 2,
@@ -102,7 +100,7 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                 title: 'GitHub',
                 description:
                     'Git repository hosting service for software development',
-                createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
+                createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
             },
             {
                 id: 3,
@@ -110,7 +108,7 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                 title: 'Stack Overflow',
                 description:
                     'Question and answer site for professional and enthusiast programmers',
-                createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
+                createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
             },
             {
                 id: 4,
@@ -118,7 +116,7 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                 title: 'Angular',
                 description:
                     'Platform and framework for building single-page client applications using HTML and TypeScript',
-                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 1 week ago
+                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
             },
             {
                 id: 5,
@@ -126,7 +124,7 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
                 title: 'TypeScript',
                 description:
                     'Typed superset of JavaScript that compiles to plain JavaScript',
-                createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) // 10 days ago
+                createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
             }
         ];
     }
@@ -134,7 +132,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
     refreshData(): void {
         this.isLoading = true;
 
-        // Simulate API call
         setTimeout(() => {
             this.loadMockData();
             this.isLoading = false;
@@ -257,7 +254,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
 
     // Interceptor demos
     triggerAuthInterceptor(): void {
-        // Simulate a request that would trigger auth interceptor
         localStorage.setItem('authToken', 'demo-token-12345');
         this.addInterceptorLog(
             'Auth token added to localStorage - next HTTP request will include Authorization header'
@@ -269,7 +265,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
     }
 
     triggerErrorInterceptor(): void {
-        // This would trigger error interceptor in a real scenario
         this.addInterceptorLog(
             'Error interceptor would handle HTTP error responses (4xx, 5xx)'
         );
@@ -280,7 +275,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
     }
 
     triggerLoadingInterceptor(): void {
-        // This demonstrates the loading interceptor
         this.addInterceptorLog(
             'Loading interceptor tracks active HTTP requests'
         );
@@ -289,7 +283,6 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
             'Loading interceptor shows/hides global loading indicator'
         );
 
-        // Simulate a quick request
         this.isLoading = true;
         setTimeout(() => {
             this.isLoading = false;

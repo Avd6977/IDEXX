@@ -69,19 +69,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                 };
 
                 console.error('HTTP Error:', errorResponse);
-
-                // You could also dispatch to a global error handling service here
-                // this.errorHandlingService.handleError(errorResponse);
-
                 return throwError(() => new Error(errorMessage));
             })
         );
     }
 
     private handleUnauthorized(): void {
-        // Clear auth token and redirect to login
         localStorage.removeItem('authToken');
-        // router.navigate(['/login']);
         console.warn('Session expired. Please log in again.');
     }
 }
