@@ -9,8 +9,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { webpageReducer } from 'src/app/store/webpage.reducer';
-import { WebpageEffects } from 'src/app/store/webpage.effects';
+import { webpageReducer, webpageListReducer } from 'src/app/store/reducers';
+import { WebpageEffects, AddWebpageEffects } from 'src/app/store/effects';
 import { routes } from 'src/app/app.routes';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { ErrorInterceptor } from 'src/app/interceptors/error.interceptor';
@@ -40,9 +40,10 @@ export const appConfig: ApplicationConfig = {
             ReactiveFormsModule,
             FormsModule,
             StoreModule.forRoot({
-                webpage: webpageReducer
+                webpage: webpageReducer,
+                webpageList: webpageListReducer
             }),
-            EffectsModule.forRoot([WebpageEffects]),
+            EffectsModule.forRoot([WebpageEffects, AddWebpageEffects]),
             StoreDevtoolsModule.instrument({
                 maxAge: 25,
                 logOnly: false,

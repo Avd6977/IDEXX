@@ -65,6 +65,25 @@
                         [attr.data-label]="column.label"
                     >
                         @switch (column.type) {
+                        <!-- Action type -->
+                        @case ('action') {
+                        <div class="action-cell">
+                            <button
+                                class="action-btn edit-btn"
+                                title="Edit"
+                                (click)="$event.stopPropagation(); rowAction.emit({ action: 'edit', item })"
+                            >
+                                ✏️
+                            </button>
+                            <button
+                                class="action-btn delete-btn"
+                                title="Delete"
+                                (click)="$event.stopPropagation(); rowAction.emit({ action: 'delete', item })"
+                            >
+                                🗑️
+                            </button>
+                        </div>
+                        }
                         <!-- URL type -->
                         @case ('url') {
                         <a

@@ -2,7 +2,7 @@ export interface TableColumn {
     key: string;
     label: string;
     sortable?: boolean;
-    type?: 'text' | 'date' | 'url' | 'number';
+    type?: 'text' | 'date' | 'url' | 'number' | 'action';
     width?: string;
     pipe?: string;
     pipeArgs?: any[];

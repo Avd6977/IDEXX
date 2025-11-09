@@ -1,9 +1,5 @@
-import {
-    webpageReducer,
-    initialState,
-    WebpageState
-} from 'src/app/store/webpage.reducer';
-import * as WebpageActions from 'src/app/store/webpage.actions';
+import { webpageReducer, initialState, WebpageState } from './webpage.reducer';
+import * as WebpageActions from '../actions/webpage.actions';
 
 describe('Webpage Reducer', () => {
     describe('unknown action', () => {

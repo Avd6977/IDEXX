@@ -6,15 +6,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-
-export interface WebpageData {
-    id?: number;
-    url: string;
-    title?: string;
-    description?: string;
-    publishDate?: string;
-    createdAt?: Date;
-}
+import { WebpageData } from 'src/app/shared/models/webpage-data.model';
 
 @Injectable({
     providedIn: 'root'

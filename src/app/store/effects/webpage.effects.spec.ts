@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
-import { WebpageEffects } from 'src/app/store/webpage.effects';
-import * as WebpageActions from 'src/app/store/webpage.actions';
+import { WebpageEffects } from './webpage.effects';
+import * as WebpageActions from '../actions/webpage.actions';
 import { Action } from '@ngrx/store';
 
 describe('WebpageEffects', () => {

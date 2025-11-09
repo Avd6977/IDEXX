@@ -1,16 +1,23 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { WebpageService, WebpageData } from 'src/app/services/webpage.service';
 import { LoaderComponent } from 'src/app/shared/components/loader/loader.component';
 import { NotificationService } from 'src/app/shared/components/notification-container/notification.service';
 import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.service';
 import { TruncatePipe } from 'src/app/shared/pipes/truncate.pipe';
 import { TimeAgoPipe } from 'src/app/shared/pipes/time-ago.pipe';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { WebpageFormComponent } from 'src/app/components/webpage-form/webpage-form.component';
 import { TableColumn } from 'src/app/shared/models/table-events.model';
+import { WebpageData } from 'src/app/shared/models/webpage-data.model';
+import { Store } from '@ngrx/store';
+import {
+    selectWebpages,
+    selectIsLoading
+} from 'src/app/store/selectors/webpage-list.selectors';
+import * as AddWebpageActions from 'src/app/store/actions/webpage-list.actions';
 
 @Component({
     selector: 'app-webpages-list',
@@ -20,6 +27,7 @@ import { TableColumn } from 'src/app/shared/models/table-events.model';
         FormsModule,
         DataTableComponent,
         LoaderComponent,
+        WebpageFormComponent,
         TruncatePipe,
         TimeAgoPipe
     ],
@@ -30,7 +38,8 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
 
     webpages: WebpageData[] = [];
-    isLoading = false;
+    isLoading$!: Observable<boolean>;
+    showWebpageFormModal = false;
     tableColumns: TableColumn[] = [
         {
             key: 'id',
@@ -65,6 +74,13 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
             sortable: true,
             type: 'date',
             width: '120px'
+        },
+        {
+            key: 'actions',
+            label: 'Actions',
+            sortable: false,
+            type: 'action',
+            width: '100px'
         }
     ];
 
@@ -74,67 +90,32 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
         'This is a very long text that demonstrates the truncate pipe functionality. It should be cut off after a certain number of characters with an ellipsis or custom trail.';
     sampleDate = new Date(Date.now() - 2 * 60 * 60 * 1000);
     interceptorLogs: { timestamp: Date; message: string }[] = [];
+    webpageDataForEdit: WebpageData | null = null;
 
     constructor(
-        private webpageService: WebpageService,
+        private store: Store,
         private notificationService: NotificationService,
         private confirmationService: ConfirmationDialogService
     ) {}
 
     ngOnInit(): void {
-        this.loadMockData();
+        this.isLoading$ = this.store.select(selectIsLoading);
+        this.loadData();
     }
 
-    private loadMockData(): void {
-        this.webpages = [
-            {
-                id: 1,
-                url: 'https://www.google.com',
-                title: 'Google',
-                description: 'Search engine and technology company',
-                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 2,
-                url: 'https://www.github.com',
-                title: 'GitHub',
-                description:
-                    'Git repository hosting service for software development',
-                createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 3,
-                url: 'https://www.stackoverflow.com',
-                title: 'Stack Overflow',
-                description:
-                    'Question and answer site for professional and enthusiast programmers',
-                createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 4,
-                url: 'https://www.angular.io',
-                title: 'Angular',
-                description:
-                    'Platform and framework for building single-page client applications using HTML and TypeScript',
-                createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 5,
-                url: 'https://www.typescriptlang.org',
-                title: 'TypeScript',
-                description:
-                    'Typed superset of JavaScript that compiles to plain JavaScript',
-                createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
-            }
-        ];
+    private loadData(): void {
+        this.store
+            .select(selectWebpages)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((data) => {
+                this.webpages = data;
+                this.closeWebpageForm();
+            });
     }
 
     refreshData(): void {
-        this.isLoading = true;
-
+        this.store.dispatch(AddWebpageActions.refreshWebpages());
         setTimeout(() => {
-            this.loadMockData();
-            this.isLoading = false;
             this.notificationService.success('Data refreshed successfully!');
         }, 1500);
     }
@@ -160,6 +141,57 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
         this.addInterceptorLog(
             `Pagination changed to page ${event.page}, size ${event.pageSize}`
         );
+    }
+
+    onRowAction(event: { action: string; item: WebpageData }): void {
+        switch (event.action) {
+            case 'delete':
+                this.onDeleteWebpage(event.item);
+                break;
+            case 'edit':
+                this.webpageDataForEdit = event.item;
+                this.openWebpageForm();
+                break;
+        }
+    }
+
+    private onDeleteWebpage(webpage: WebpageData): void {
+        if (!webpage.id) {
+            this.notificationService.error(
+                'Delete Failed',
+                'Unable to delete webpage without a valid ID.'
+            );
+            return;
+        }
+
+        this.confirmationService
+            .confirmDelete(webpage.title)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((confirmed) => {
+                if (confirmed) {
+                    this.store.dispatch(
+                        AddWebpageActions.deleteWebpage({
+                            id: webpage.id as number
+                        })
+                    );
+                    // Show success notification when delete completes
+                    setTimeout(() => {
+                        this.notificationService.success(
+                            'Webpage Deleted',
+                            `"${webpage.title}" has been deleted successfully.`
+                        );
+                    }, 300);
+                }
+            });
+    }
+
+    openWebpageForm(): void {
+        this.showWebpageFormModal = true;
+    }
+
+    closeWebpageForm(): void {
+        this.showWebpageFormModal = false;
+        this.webpageDataForEdit = null;
     }
 
     // Loader demos
@@ -283,9 +315,9 @@ export class WebpagesListComponent implements OnInit, OnDestroy {
             'Loading interceptor shows/hides global loading indicator'
         );
 
-        this.isLoading = true;
+        this.store.dispatch(AddWebpageActions.refreshWebpages());
         setTimeout(() => {
-            this.isLoading = false;
+            this.store.dispatch(AddWebpageActions.refreshWebpagesSuccess());
             this.addInterceptorLog(
                 'Loading interceptor cleared - no active requests'
             );

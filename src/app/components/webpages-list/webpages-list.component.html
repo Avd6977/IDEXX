@@ -25,16 +25,23 @@
             types and custom pipes.
         </p>
 
+        <div class="table-controls">
+            <button class="btn btn-primary" (click)="openWebpageForm()">
+                ➕ Add Webpage
+            </button>
+        </div>
+
         <app-data-table
             [data]="webpages"
             [columns]="tableColumns"
-            [loading]="isLoading"
+            [loading]="(isLoading$ | async) || false"
             [searchable]="true"
             [pageSize]="10"
             (rowClick)="onRowClick($event)"
             (sort)="onSort($event)"
             (filter)="onFilter($event)"
             (pagination)="onPagination($event)"
+            (rowAction)="onRowAction($event)"
         >
         </app-data-table>
     </div>
@@ -192,4 +199,25 @@
         </div>
         }
     </div>
+
+    <!-- Webpage Form Modal -->
+    @if (showWebpageFormModal) {
+    <div class="modal-overlay" (click)="closeWebpageForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h3>Add New Webpage</h3>
+                <button
+                    class="modal-close-btn"
+                    (click)="closeWebpageForm()"
+                    title="Close"
+                >
+                    ✕
+                </button>
+            </div>
+            <div class="modal-body">
+                <app-webpage-form [webpageData]="webpageDataForEdit"></app-webpage-form>
+            </div>
+        </div>
+    </div>
+    }
 </div>

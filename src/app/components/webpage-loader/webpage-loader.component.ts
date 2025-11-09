@@ -5,12 +5,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as WebpageActions from 'src/app/store/webpage.actions';
+import * as WebpageActions from 'src/app/store/actions';
 import {
     selectCurrentUrl,
     selectIsLoading,
     selectError
-} from 'src/app/store/webpage.selectors';
+} from 'src/app/store/selectors';
 
 @Component({
     selector: 'app-webpage-loader',

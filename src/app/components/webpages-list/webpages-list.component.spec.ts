@@ -3,6 +3,8 @@ import { WebpagesListComponent } from 'src/app/components/webpages-list/webpages
 import { NotificationService } from 'src/app/shared/components/notification-container/notification.service';
 import { ConfirmationDialogService } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.service';
 import { WebpageService } from 'src/app/services/webpage.service';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('WebpagesListComponent', () => {
     let component: WebpagesListComponent;
@@ -10,6 +12,7 @@ describe('WebpagesListComponent', () => {
     let mockNotificationService: jasmine.SpyObj<NotificationService>;
     let mockConfirmationService: jasmine.SpyObj<ConfirmationDialogService>;
     let mockWebpageService: jasmine.SpyObj<WebpageService>;
+    let mockStore: jasmine.SpyObj<Store>;
 
     beforeEach(async () => {
         const notificationSpy = jasmine.createSpyObj('NotificationService', [
@@ -25,6 +28,18 @@ describe('WebpagesListComponent', () => {
         const webpageSpy = jasmine.createSpyObj('WebpageService', [
             'getWebpages'
         ]);
+        const storeSpy = jasmine.createSpyObj('Store', ['dispatch', 'select']);
+        // Mock store.select() to return observables with mock data
+        const mockWebpages = [
+            {
+                id: 1,
+                url: 'https://google.com',
+                title: 'Google',
+                description: 'Search engine',
+                createdAt: new Date()
+            }
+        ];
+        storeSpy.select.and.callFake(() => of(mockWebpages));
 
         await TestBed.configureTestingModule({
             imports: [WebpagesListComponent],
@@ -34,7 +49,8 @@ describe('WebpagesListComponent', () => {
                     provide: ConfirmationDialogService,
                     useValue: confirmationSpy
                 },
-                { provide: WebpageService, useValue: webpageSpy }
+                { provide: WebpageService, useValue: webpageSpy },
+                { provide: Store, useValue: storeSpy }
             ]
         }).compileComponents();
 
@@ -49,6 +65,9 @@ describe('WebpagesListComponent', () => {
         mockWebpageService = TestBed.inject(
             WebpageService
         ) as jasmine.SpyObj<WebpageService>;
+        mockStore = TestBed.inject(Store) as jasmine.SpyObj<Store>;
+
+        fixture.detectChanges();
     });
 
     it('should create', () => {
@@ -56,17 +75,14 @@ describe('WebpagesListComponent', () => {
     });
 
     it('should load mock data on init', () => {
-        component.ngOnInit();
         expect(component.webpages.length).toBeGreaterThan(0);
         expect(component.webpages[0].title).toBe('Google');
     });
 
     it('should show success notification on refresh', (done) => {
         component.refreshData();
-        expect(component.isLoading).toBeTruthy();
-
+        // refreshData dispatches action; verify notification is shown after delay
         setTimeout(() => {
-            expect(component.isLoading).toBeFalsy();
             expect(mockNotificationService.success).toHaveBeenCalledWith(
                 'Data refreshed successfully!'
             );
@@ -107,5 +123,17 @@ describe('WebpagesListComponent', () => {
             expect(component.showLoaderDemo).toBeFalsy();
             done();
         }, 3100);
+    });
+
+    it('should open webpage form modal', () => {
+        expect(component.showWebpageFormModal).toBeFalsy();
+        component.openWebpageForm();
+        expect(component.showWebpageFormModal).toBeTruthy();
+    });
+
+    it('should close webpage form modal', () => {
+        component.showWebpageFormModal = true;
+        component.closeWebpageForm();
+        expect(component.showWebpageFormModal).toBeFalsy();
     });
 });

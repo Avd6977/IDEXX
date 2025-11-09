@@ -46,6 +46,7 @@ export class DataTableComponent implements OnInit, OnChanges, OnDestroy {
     @Output() sort = new EventEmitter<SortEvent>();
     @Output() filter = new EventEmitter<FilterEvent>();
     @Output() rowClick = new EventEmitter<any>();
+    @Output() rowAction = new EventEmitter<{ action: string; item: any }>();
     @Output() pagination = new EventEmitter<PaginationEvent>();
 
     // Internal state

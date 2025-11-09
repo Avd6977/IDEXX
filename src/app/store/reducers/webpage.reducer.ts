@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import * as WebpageActions from 'src/app/store/webpage.actions';
+import * as WebpageActions from '../actions/webpage.actions';
 
 export interface WebpageState {
     currentUrl: string;
